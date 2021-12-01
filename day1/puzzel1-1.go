@@ -34,45 +34,49 @@ func readInputNumber(inputFile string) ([]int, error) {
 	return nums, err
 }
 
-func PartOne() {
-	fmt.Println("Advent of Code Day: 1 - Part One")
-	fmt.Println("Question: How many measurements are larger than the previous measurement?")
-
-	// Read input
-	depths, err := readInputNumber("day1/input.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	count := 0
-	for i := 1; i < len(depths); i++ {
-		if depths[i-1] < depths[i] {
-			count++
+func getSummedValues(data []int, windowsSize int) ([]int, error) {
+	var result []int
+	for i := windowsSize - 1; i < len(data); i++ {
+		sum := 0
+		for p := 0; p < windowsSize; p++ {
+			sum = sum + data[i-p]
 		}
+
+		result = append(result, sum)
 	}
 
-	fmt.Println("Answer:", count)
+	return result, nil
 }
 
-func PartTwo() {
-	fmt.Println("Advent of Code: Day 1 - Part Two")
-	fmt.Println("Question: How many sums are larger than the previous sum?")
-
-	// Read input
-	depths, err := readInputNumber("day1/input.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-
+func getNumberOfPositiveGradients(data []int) (int, error) {
 	count := 0
-	for i := 3; i < len(depths); i++ {
-		sum1 := depths[i-3] + depths[i-2] + depths[i-1]
-		sum2 := depths[i-2] + depths[i-1] + depths[i]
-		if sum1 < sum2 {
+	for i := 1; i < len(data); i++ {
+		if data[i-1] < data[i] {
 			count++
 		}
 	}
 
-	fmt.Println("Answer:", count)
+	return count, nil
+}
 
+func Solve() {
+	// Read input
+	deeps, err := readInputNumber("day1/input.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Part One
+	fmt.Print("Day 1 - Part One: How many measurements are larger than the previous measurement? ")
+
+	answer1, _ := getNumberOfPositiveGradients(deeps)
+	fmt.Println(fmt.Sprintf("Answer: [%d]", answer1))
+
+	// Part Two
+	fmt.Print("Day 1 - Part Two: How many sums are larger than the previous sum? ")
+
+	summedDeeps, _ := getSummedValues(deeps, 3)
+
+	answer2, _ := getNumberOfPositiveGradients(summedDeeps)
+	fmt.Println(fmt.Sprintf("Answer: [%d]", answer2))
 }

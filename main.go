@@ -1,8 +1,12 @@
 package main
 
-import "drueke.biz/advent-of-code-2021/day1"
+import (
+	"fmt"
+
+	"drueke.biz/advent-of-code-2021/day1"
+)
 
 func main() {
-	// day1.PartOne()
-	day1.PartTwo()
+	fmt.Println("Advent of Code 2021")
+	day1.Solve()
 }
