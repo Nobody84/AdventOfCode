@@ -35,7 +35,7 @@ func readInputNumber(inputFile string) ([]int, error) {
 }
 
 func PartOne() {
-	fmt.Println("Advent of Code Puzzel 1.1")
+	fmt.Println("Advent of Code Day: 1 - Part One")
 	fmt.Println("Question: How many measurements are larger than the previous measurement?")
 
 	// Read input
@@ -55,7 +55,7 @@ func PartOne() {
 }
 
 func PartTwo() {
-	fmt.Println("Advent of Code Puzzel 1.2")
+	fmt.Println("Advent of Code: Day 1 - Part Two")
 	fmt.Println("Question: How many sums are larger than the previous sum?")
 
 	// Read input
