@@ -21,7 +21,13 @@ func Solve() {
 	fmt.Print("Day 2 - Part One: What do you get if you multiply your final horizontal position by your final depth? ")
 
 	depth, horizontalPosition := calcultePosition(submarineCommands)
-	fmt.Println(fmt.Printf("Answer: [%d]", depth*horizontalPosition))
+	fmt.Printf("Answer: [%d]\n", depth*horizontalPosition)
+
+	// Part Two
+	fmt.Print("Day 2 - Part Two: What do you get if you multiply your final horizontal position by your final depth? (With aim) ")
+
+	depth2, horizontalPosition2 := calcultePositionWithAim(submarineCommands)
+	fmt.Printf("Answer: [%d]\n", depth2*horizontalPosition2)
 }
 
 func readInputCommands(inputFile string) ([]command, error) {
@@ -64,15 +70,32 @@ func calcultePosition(commands []command) (depth int, horizontalPosition int) {
 		switch command.direction {
 		case "forward":
 			horizontalPosition += command.units
-			break
 		case "down":
 			depth += command.units
-			break
 		case "up":
 			depth -= command.units
-			break
 		}
 	}
 
-	return
+	return depth, horizontalPosition
+}
+
+func calcultePositionWithAim(commands []command) (depth int, horizontalPosition int) {
+	depth = 0
+	horizontalPosition = 0
+	aim := 0
+
+	for _, command := range commands {
+		switch command.direction {
+		case "forward":
+			horizontalPosition += command.units
+			depth += aim * command.units
+		case "down":
+			aim += command.units
+		case "up":
+			aim -= command.units
+		}
+	}
+
+	return depth, horizontalPosition
 }
