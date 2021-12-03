@@ -48,16 +48,13 @@ func getPowerCosumption(reportLines []string) (powerConsumption int) {
 
 	// Get the bits for the gamma and epsilon rate
 	gammaRateBits := make([]rune, lineLength)
-	epsilonRateBits := make([]rune, lineLength)
 	for x, value := range numberOfOneBitsAtIndex {
 		// 1 is the most common bit of this index if the number of ones
 		// is greater than the half of all lines; otherwise 0 is the most common bit.
 		if value > numberOfLines-value {
 			gammaRateBits[x] = '1'
-			epsilonRateBits[x] = '0'
 		} else {
 			gammaRateBits[x] = '0'
-			epsilonRateBits[x] = '1'
 		}
 	}
 
