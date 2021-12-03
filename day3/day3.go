@@ -63,7 +63,7 @@ func getPowerCosumption(reportLines []string) (powerConsumption int) {
 
 	// Convert the bit values to int
 	gammaRate := convertBitArrayToInt(gammaRateBits)
-	epsilonRate := convertBitArrayToInt(epsilonRateBits)
+	epsilonRate := gammaRate ^ int(^uint32(0)>>(32-lineLength))
 
 	return gammaRate * epsilonRate
 }
