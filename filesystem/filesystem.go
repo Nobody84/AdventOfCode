@@ -2,7 +2,6 @@ package filesystem
 
 import (
 	"bufio"
-	"log"
 	"os"
 )
 
@@ -10,7 +9,7 @@ func ReadInputLines(inputFile string) ([]string, error) {
 	// Open file
 	file, err := os.Open(inputFile)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	defer file.Close()
 
@@ -24,5 +23,5 @@ func ReadInputLines(inputFile string) ([]string, error) {
 		lines = append(lines, line)
 	}
 
-	return lines, err
+	return lines, nil
 }
