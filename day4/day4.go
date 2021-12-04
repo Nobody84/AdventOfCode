@@ -3,7 +3,6 @@ package day4
 import (
 	"fmt"
 	"log"
-	"regexp"
 	"strconv"
 	"strings"
 
@@ -13,13 +12,13 @@ import (
 var clear map[string]func() //create a map for storing clear funcs
 const BoardSize int = 5
 
-type boardNumber struct {
+type BoardNumber struct {
 	value    int
 	isMarked bool
 }
 
-type bingoBoard struct {
-	numbers [5][5]boardNumber
+type BingoBoard struct {
+	numbers [5][5]BoardNumber
 }
 
 func Solve() {
@@ -30,7 +29,7 @@ func Solve() {
 	}
 
 	// Get drawn numbers
-	drawnNumber := getDrawnNumber(inputLines[0])
+	numbers := getDrawnNumber(inputLines[0])
 
 	// Get boards
 	boards := getBoards(inputLines)
@@ -38,32 +37,66 @@ func Solve() {
 	// Part One
 	fmt.Print("Day 4 - Part One: What will your final score be if you choose that board? ")
 
+	// Get first winning board
+	firstWinningBoard, lastDrawnNumber := getFirstWinningBoard(boards, numbers)
+	answer1 := firstWinningBoard.GetScore() * lastDrawnNumber
+
+	fmt.Printf("Answer: [%d]\n", answer1)
+
+	// Part Two
+	fmt.Print("Day 4 - Part One: Once it wins, what would its final score be? ")
+
+	lastWinningBoard, lastDrawnNumber := getLastWinningBoard(boards, numbers)
+	answer2 := lastWinningBoard.GetScore() * lastDrawnNumber
+
+	fmt.Printf("Answer: [%d]\n", answer2)
+}
+
+func getFirstWinningBoard(boards []BingoBoard, numbers []int) (board BingoBoard, lastDrawnNumber int) {
 	// Draw numbers
-	winningBoardIndex := -1
-	lastDrawnNumber := -1
-	for _, number := range drawnNumber {
-		// fmt.Print(number, " ")
+	boardIndex := -1
+	lastDrawnNumber = -1
+	for _, number := range numbers {
 		for i := 0; i < len(boards); i++ {
 			boards[i].MarkNumber(number)
-			// boards[i].Print()
-			// fmt.Println()
-
 			if boards[i].HasBingo() {
-				// fmt.Println()
-				// boards[i].Print()
-				winningBoardIndex = i
+				boardIndex = i
 				lastDrawnNumber = number
 				break
 			}
 		}
 
-		if winningBoardIndex != -1 {
+		if boardIndex != -1 {
 			break
 		}
 	}
 
-	answer1 := boards[winningBoardIndex].SumUnmarkedNumbers() * lastDrawnNumber
-	fmt.Printf("Answer: [%d]\n", answer1)
+	return boards[boardIndex], lastDrawnNumber
+}
+
+func getLastWinningBoard(boards []BingoBoard, numbers []int) (board BingoBoard, lastDrawnNumber int) {
+	finishedBoard := make(map[int]bool)
+	boardIndex := -1
+	for _, number := range numbers {
+		for i := 0; i < len(boards); i++ {
+			// Skip board if allready finished.
+			_, ok := finishedBoard[i]
+			if ok {
+				continue
+			}
+
+			// Mark the number on the board
+			boards[i].MarkNumber(number)
+			if boards[i].HasBingo() {
+				// If the board is finished, store the index.
+				finishedBoard[i] = true
+				boardIndex = i
+				lastDrawnNumber = number
+			}
+		}
+	}
+
+	return boards[boardIndex], lastDrawnNumber
 }
 
 func getDrawnNumber(line string) (drawnNumbers []int) {
@@ -75,18 +108,16 @@ func getDrawnNumber(line string) (drawnNumbers []int) {
 	return
 }
 
-func getBoards(inputLines []string) (boards []bingoBoard) {
+func getBoards(inputLines []string) (boards []BingoBoard) {
 	rowOffset := 2
-	whitespaceRegex := regexp.MustCompile(`\s+`)
 
 	for i := rowOffset; i < len(inputLines); i += BoardSize + 1 {
-		var newBoard bingoBoard
+		var newBoard BingoBoard
 		for y := 0; y < BoardSize; y++ {
-			trimmedLine := whitespaceRegex.ReplaceAllString(strings.TrimSpace(inputLines[i+y]), " ")
-			rowValues := strings.Split(trimmedLine, " ")
+			rowValues := strings.Fields(inputLines[i+y])
 			for x := 0; x < BoardSize; x++ {
 				number, _ := strconv.Atoi(rowValues[x])
-				newBoard.numbers[x][y] = boardNumber{value: number, isMarked: false}
+				newBoard.numbers[x][y] = BoardNumber{value: number, isMarked: false}
 			}
 		}
 
@@ -96,7 +127,7 @@ func getBoards(inputLines []string) (boards []bingoBoard) {
 	return
 }
 
-func (board *bingoBoard) Print() {
+func (board *BingoBoard) Print() {
 	for y := 0; y < BoardSize; y++ {
 		for x := 0; x < BoardSize; x++ {
 			if board.numbers[x][y].isMarked {
@@ -110,7 +141,7 @@ func (board *bingoBoard) Print() {
 	}
 }
 
-func (board *bingoBoard) HasBingo() (result bool) {
+func (board *BingoBoard) HasBingo() (result bool) {
 	columnResults := make([]bool, BoardSize)
 	for i := 0; i < BoardSize; i++ {
 		columnResults[i] = true
@@ -139,7 +170,7 @@ func (board *bingoBoard) HasBingo() (result bool) {
 	return false
 }
 
-func (board *bingoBoard) MarkNumber(number int) {
+func (board *BingoBoard) MarkNumber(number int) {
 	for y := 0; y < BoardSize; y++ {
 		for x := 0; x < BoardSize; x++ {
 			if board.numbers[x][y].value == number {
@@ -149,7 +180,7 @@ func (board *bingoBoard) MarkNumber(number int) {
 	}
 }
 
-func (board *bingoBoard) SumUnmarkedNumbers() (sum int) {
+func (board *BingoBoard) GetScore() (sum int) {
 	for y := 0; y < BoardSize; y++ {
 		for x := 0; x < BoardSize; x++ {
 			if !board.numbers[x][y].isMarked {
