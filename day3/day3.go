@@ -6,7 +6,7 @@ import (
 	"math"
 	"strconv"
 
-	"drueke.biz/advent-of-code-2021/filesystem"
+	"nobody84/advent-of-code-2021/filesystem"
 )
 
 type SearchCriteria int

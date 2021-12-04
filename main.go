@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"drueke.biz/advent-of-code-2021/day3"
+	"nobody84/advent-of-code-2021/day3"
 )
 
 func main() {

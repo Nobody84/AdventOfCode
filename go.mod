@@ -1,3 +1,3 @@
-module drueke.biz/advent-of-code-2021
+module nobody84/advent-of-code-2021
 
 go 1.17
