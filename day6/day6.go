@@ -16,6 +16,10 @@ type LanternFishPopulation struct {
 	lanternFishes []LanternFisch
 }
 
+type LanternFishPopulation2 struct {
+	lanternFishesPerTimer []int
+}
+
 func Solve() {
 	// Read input lines
 	inputLines, err := filesystem.ReadInputLines("day6/input.txt")
@@ -24,7 +28,10 @@ func Solve() {
 	}
 
 	// PartOne
-	partOne(inputLines)
+	// partOne(inputLines)
+
+	partTwo(inputLines)
+
 }
 
 func partOne(inputLines []string) {
@@ -42,6 +49,25 @@ func partOne(inputLines []string) {
 
 	answer := lanternFischPopulation.Count()
 	fmt.Print("Day 6 - How many lanternfish would there be after 80 days? ")
+	fmt.Printf("Answer: [%d]\n", answer)
+}
+
+func partTwo(inputLines []string) {
+	// Get first generation
+	firstGeneration := getFirstGeneration(inputLines[0])
+	var lanternFischPopulation LanternFishPopulation2
+	lanternFischPopulation.Init(firstGeneration)
+
+	// fmt.Printf("Initial state:: %s", lanternFischPopulation.String())
+	// fmt.Println()
+	for day := 0; day < 256; day++ {
+		lanternFischPopulation.LetADayPass()
+		// fmt.Printf("After %2d day(s): %s", day, lanternFischPopulation.String())
+		// fmt.Println()
+	}
+
+	answer := lanternFischPopulation.Count()
+	fmt.Print("Day 6 - How many lanternfish would there be after 256 days? ")
 	fmt.Printf("Answer: [%d]\n", answer)
 }
 
@@ -91,4 +117,33 @@ func (lanternFishPopulation *LanternFishPopulation) String() string {
 
 func (lanternFishPopulation *LanternFishPopulation) Count() int {
 	return len(lanternFishPopulation.lanternFishes)
+}
+
+func (lanternFishPopulation *LanternFishPopulation2) Init(firstGeneration []LanternFisch) {
+	for i := 0; i < 9; i++ {
+		lanternFishPopulation.lanternFishesPerTimer = append(lanternFishPopulation.lanternFishesPerTimer, 0)
+	}
+
+	for i := 0; i < len(firstGeneration); i++ {
+		lanternFishPopulation.lanternFishesPerTimer[firstGeneration[i].timer]++
+	}
+}
+
+func (lanternFishPopulation *LanternFishPopulation2) LetADayPass() {
+	nextGenerationCount := lanternFishPopulation.lanternFishesPerTimer[0]
+	for i := 0; i < 8; i++ {
+		lanternFishPopulation.lanternFishesPerTimer[i] = lanternFishPopulation.lanternFishesPerTimer[i+1]
+	}
+
+	lanternFishPopulation.lanternFishesPerTimer[6] += nextGenerationCount
+	lanternFishPopulation.lanternFishesPerTimer[8] = nextGenerationCount
+}
+
+func (lanternFishPopulation *LanternFishPopulation2) Count() int {
+	count := 0
+	for i := 0; i < 9; i++ {
+		count += lanternFishPopulation.lanternFishesPerTimer[i]
+	}
+
+	return count
 }
