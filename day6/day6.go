@@ -28,8 +28,9 @@ func Solve() {
 	}
 
 	// PartOne
-	// partOne(inputLines)
+	partOne(inputLines)
 
+	// PartTwo
 	partTwo(inputLines)
 
 }
