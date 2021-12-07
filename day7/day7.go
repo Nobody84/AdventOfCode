@@ -18,7 +18,11 @@ func Solve() {
 	// Get horizontal positions for all craps
 	horizontalCrapPositions := getHorizontalCrapPositions(inputLines[0])
 
+	// Part One
 	partOne(horizontalCrapPositions)
+
+	// Part Two
+	partTwo(horizontalCrapPositions)
 }
 
 func getHorizontalCrapPositions(inputLine string) (horizontalCrapPositions []uint) {
@@ -35,6 +39,15 @@ func getHorizontalCrapPositions(inputLine string) (horizontalCrapPositions []uin
 func partOne(horizontalCrapPositions []uint) {
 	min, max := getRange(horizontalCrapPositions)
 	horizontalPosition, usedFule := calculateSweetSpot(horizontalCrapPositions, min, max)
+	fmt.Println(horizontalPosition, usedFule)
+
+	fmt.Printf("Day 7 - How much fuel must they spend to align to that position? Answer: [%d]\n", usedFule)
+}
+
+// Part Two
+func partTwo(horizontalCrapPositions []uint) {
+	min, max := getRange(horizontalCrapPositions)
+	horizontalPosition, usedFule := calculateSweetSpot2(horizontalCrapPositions, min, max)
 	fmt.Println(horizontalPosition, usedFule)
 
 	fmt.Printf("Day 7 - How much fuel must they spend to align to that position? Answer: [%d]\n", usedFule)
@@ -79,4 +92,33 @@ func calculateSweetSpot(horizontalCrapPositions []uint, min uint, max uint) (hor
 	}
 
 	return
+}
+
+func calculateSweetSpot2(horizontalCrapPositions []uint, min uint, max uint) (horizontalPosition uint, maxUsedFule uint) {
+	maxUsedFule = ^uint(0)
+	for i := min; i <= max; i++ {
+		usedFule := uint(0)
+		for p := 0; p < len(horizontalCrapPositions); p++ {
+			if i > horizontalCrapPositions[p] {
+				usedFule += getFuleForDistance(i - horizontalCrapPositions[p])
+			} else {
+				usedFule += getFuleForDistance(horizontalCrapPositions[p] - i)
+			}
+
+			if usedFule > maxUsedFule {
+				break
+			}
+		}
+
+		if usedFule < maxUsedFule {
+			maxUsedFule = usedFule
+			horizontalPosition = i
+		}
+	}
+
+	return
+}
+
+func getFuleForDistance(distance uint) uint {
+	return (distance * (distance + 1)) / 2
 }
