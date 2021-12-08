@@ -1,3 +1,4 @@
 /advent-of-code-2021.exe
 /debug.log
 .vscode/launch.json
+*.exe
