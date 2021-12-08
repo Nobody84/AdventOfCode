@@ -1,7 +1,6 @@
 package day3
 
 import (
-	"fmt"
 	"log"
 	"math"
 	"strconv"
@@ -16,24 +15,24 @@ const (
 	LeastCommonBit
 )
 
-func Solve() {
+func PartOne(puzzelInput string) int {
 	// Read input lines
-	reportLines, err := filesystem.ReadInputLines("day3/input.txt")
+	inputLines, err := filesystem.ReadInputLines(puzzelInput)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Part One
-	fmt.Print("Day 3 - Part One: What is the power consumption of the submarine? ")
+	return getPowerCosumption(inputLines)
+}
 
-	answer1 := getPowerCosumption(reportLines)
-	fmt.Println(fmt.Sprintf("Answer: [%d]", answer1))
+func PartTwo(puzzelInput string) int {
+	// Read input lines
+	inputLines, err := filesystem.ReadInputLines(puzzelInput)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	// Part Two
-	fmt.Print("Day 3 - Part One: What is the life support rating of the submarine? ")
-
-	answer2 := getLifeSupportRating(reportLines)
-	fmt.Println(fmt.Sprintf("Answer: [%d]", answer2))
+	return getLifeSupportRating(inputLines)
 }
 
 func getPowerCosumption(reportLines []string) (powerConsumption int) {
