@@ -18,4 +18,5 @@ func main() {
 	// day7.Solve()
 
 	fmt.Printf("Day 8 - Part One: In the output values, how many times do digits 1, 4, 7, or 8 appear? Answer: [%d]\n", day8.PartOne("day8/input.txt"))
+	fmt.Printf("Day 8 - Part Two: What do you get if you add up all of the output values? Answer: [%d]\n", day8.PartTwo("day8/input.txt"))
 }
