@@ -25,6 +25,6 @@ func main() {
 	// fmt.Printf("Day 8 - Part One: In the output values, how many times do digits 1, 4, 7, or 8 appear? Answer: [%d]\n", day8.PartOne("day8/input.txt"))
 	// fmt.Printf("Day 8 - Part Two: What do you get if you add up all of the output values? Answer: [%d]\n", day8.PartTwo("day8/input.txt"))
 
-	fmt.Printf("Day 9 - Part One: What is the sum of the risk levels of all low points on your heightmap? Answer: [%d]\n", day9.PartOne("day9/input.txt"))
-	// fmt.Printf("Day 9 - Part Two: What do you get if you add up all of the output values? Answer: [%d]\n", day8.PartTwo("day8/input.txt"))
+	// fmt.Printf("Day 9 - Part One: What is the sum of the risk levels of all low points on your heightmap? Answer: [%d]\n", day9.PartOne("day9/input.txt"))
+	fmt.Printf("Day 9 - Part Two: What do you get if you multiply together the sizes of the three largest basins? Answer: [%d]\n", day9.PartTwo("day9/input.txt"))
 }

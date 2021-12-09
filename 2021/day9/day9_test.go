@@ -13,10 +13,10 @@ func TestPartOne(t *testing.T) {
 	assert.Equal(t, answer, 15, "Day9 - Part One")
 }
 
-// func TestPartTwo(t *testing.T) {
-// 	// Act
-// 	answer := PartTwo("input_test.txt")
+func TestPartTwo(t *testing.T) {
+	// Act
+	answer := PartTwo("input_test.txt")
 
-// 	// Assert
-// 	assert.Equal(t, answer, 61229, "Day8 - Part Two")
-// }
+	// Assert
+	assert.Equal(t, answer, 1134, "Day8 - Part Two")
+}
