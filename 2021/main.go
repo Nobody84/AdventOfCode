@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"nobody84/advent-of-code-2021/day8"
+	"nobody84/advent-of-code-2021/day9"
 )
 
 func main() {
@@ -22,6 +22,9 @@ func main() {
 	// fmt.Printf("Day 1 - Part One: How many measurements are larger than the previous measurement? Answer: [%d]\n", day1.PartOne("day1/input.txt"))
 	// fmt.Printf("Day 1 - Part Two: How many sums are larger than the previous sum? Answer: [%d]\n", day1.PartTwo("day1/input.txt"))
 
-	fmt.Printf("Day 8 - Part One: In the output values, how many times do digits 1, 4, 7, or 8 appear? Answer: [%d]\n", day8.PartOne("day8/input.txt"))
-	fmt.Printf("Day 8 - Part Two: What do you get if you add up all of the output values? Answer: [%d]\n", day8.PartTwo("day8/input.txt"))
+	// fmt.Printf("Day 8 - Part One: In the output values, how many times do digits 1, 4, 7, or 8 appear? Answer: [%d]\n", day8.PartOne("day8/input.txt"))
+	// fmt.Printf("Day 8 - Part Two: What do you get if you add up all of the output values? Answer: [%d]\n", day8.PartTwo("day8/input.txt"))
+
+	fmt.Printf("Day 9 - Part One: What is the sum of the risk levels of all low points on your heightmap? Answer: [%d]\n", day9.PartOne("day9/input.txt"))
+	// fmt.Printf("Day 9 - Part Two: What do you get if you add up all of the output values? Answer: [%d]\n", day8.PartTwo("day8/input.txt"))
 }
