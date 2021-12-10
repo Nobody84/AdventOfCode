@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"nobody84/advent-of-code-2021/day9"
+	"nobody84/advent-of-code-2021/day10"
 )
 
 func main() {
@@ -26,5 +26,8 @@ func main() {
 	// fmt.Printf("Day 8 - Part Two: What do you get if you add up all of the output values? Answer: [%d]\n", day8.PartTwo("day8/input.txt"))
 
 	// fmt.Printf("Day 9 - Part One: What is the sum of the risk levels of all low points on your heightmap? Answer: [%d]\n", day9.PartOne("day9/input.txt"))
-	fmt.Printf("Day 9 - Part Two: What do you get if you multiply together the sizes of the three largest basins? Answer: [%d]\n", day9.PartTwo("day9/input.txt"))
+	// fmt.Printf("Day 9 - Part Two: What do you get if you multiply together the sizes of the three largest basins? Answer: [%d]\n", day9.PartTwo("day9/input.txt"))
+
+	// fmt.Printf("Day 10 - Part One: W What is the total syntax error score for those errors? Answer: [%d]\n", day10.PartOne("day10/input.txt"))
+	fmt.Printf("Day 10 - Part Two: What is the middle score? Answer: [%d]\n", day10.PartTwo("day10/input.txt"))
 }
