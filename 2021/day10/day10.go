@@ -146,7 +146,6 @@ func isOpeningChar(char rune) bool {
 	}
 
 	return false
-	// return char == '(' || char == '[' || char == '{' || char == '>'
 }
 
 func isClosingChar(char rune) bool {
@@ -157,7 +156,6 @@ func isClosingChar(char rune) bool {
 	}
 
 	return false
-	// return char == ')' || char == ']' || char == '}' || char == '<'
 }
 
 func isMatchingChar(lastChars []rune, currentChar rune) bool {
