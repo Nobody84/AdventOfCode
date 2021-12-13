@@ -94,54 +94,25 @@ func (transparentPaper *TransparentPaper) FoldOneTime() {
 	foldingInstruction := transparentPaper.foldingInstructions[0]
 	transparentPaper.foldingInstructions = transparentPaper.foldingInstructions[1:]
 
-	switch foldingInstruction.axis {
-	case "x":
-		transparentPaper.dots = FoldVertical(transparentPaper.dots, foldingInstruction.value)
-	case "y":
-		transparentPaper.dots = FoldHorizontal(transparentPaper.dots, foldingInstruction.value)
-	}
-}
-
-func FoldHorizontal(dots []Dot, y int) (resultingDots []Dot) {
 	existingDots := make(map[string]struct{})
-	for _, dot := range dots {
-		if dot.y < y {
-			newDot := Dot{y: dot.y, x: dot.x}
-			if _, ok := existingDots[newDot.ToString()]; !ok {
-				resultingDots = append(resultingDots, newDot)
-				existingDots[newDot.ToString()] = struct{}{}
-			}
-		} else if dot.y > y {
-			newDot := Dot{y: 2*y - dot.y, x: dot.x}
-			if _, ok := existingDots[newDot.ToString()]; !ok {
-				resultingDots = append(resultingDots, newDot)
-				existingDots[newDot.ToString()] = struct{}{}
-			}
+	var resultingDots []Dot
+	for _, dot := range transparentPaper.dots {
+		var newDot Dot
+		if foldingInstruction.axis == "x" && dot.x > foldingInstruction.value {
+			newDot = Dot{y: dot.y, x: 2*foldingInstruction.value - dot.x}
+		} else if foldingInstruction.axis == "y" && dot.y > foldingInstruction.value {
+			newDot = Dot{y: 2*foldingInstruction.value - dot.y, x: dot.x}
+		} else {
+			newDot = Dot{y: dot.y, x: dot.x}
+		}
+
+		if _, ok := existingDots[newDot.ToString()]; !ok {
+			resultingDots = append(resultingDots, newDot)
+			existingDots[newDot.ToString()] = struct{}{}
 		}
 	}
 
-	return
-}
-
-func FoldVertical(dots []Dot, x int) (resultingDots []Dot) {
-	existingDots := make(map[string]struct{})
-	for _, dot := range dots {
-		if dot.x < x {
-			newDot := Dot{y: dot.y, x: dot.x}
-			if _, ok := existingDots[newDot.ToString()]; !ok {
-				resultingDots = append(resultingDots, newDot)
-				existingDots[newDot.ToString()] = struct{}{}
-			}
-		} else if dot.x > x {
-			newDot := Dot{y: dot.y, x: 2*x - dot.x}
-			if _, ok := existingDots[newDot.ToString()]; !ok {
-				resultingDots = append(resultingDots, newDot)
-				existingDots[newDot.ToString()] = struct{}{}
-			}
-		}
-	}
-
-	return
+	transparentPaper.dots = resultingDots
 }
 
 func (transparentPaper *TransparentPaper) Print() {
