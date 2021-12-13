@@ -15,7 +15,7 @@ func TestPartOne(t *testing.T) {
 
 func TestPartTwo(t *testing.T) {
 	// Act
-	answer := PartOne("input_test.txt")
+	answer := PartTwo("input_test.txt")
 
 	// Assert
 	assert.Equal(t, answer, 288957, "Day10 - Part Two")
