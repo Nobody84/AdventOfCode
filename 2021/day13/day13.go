@@ -73,8 +73,8 @@ func ReadPaper(inputLines []string) (transparentPaper TransparentPaper) {
 	for i := row; i < len(inputLines); i++ {
 		line := inputLines[i]
 		submatches := r.FindStringSubmatch(line)
-		axis := submatches[1]
-		value, _ := strconv.Atoi(submatches[2])
+		axis := submatches[r.SubexpIndex("axis")]
+		value, _ := strconv.Atoi(submatches[r.SubexpIndex("value")])
 		foldingInstructions = append(foldingInstructions, FoldingInstruction{axis: axis, value: value})
 	}
 
