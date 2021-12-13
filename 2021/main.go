@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"nobody84/advent-of-code-2021/day12"
+	"nobody84/advent-of-code-2021/day13"
 )
 
 func main() {
@@ -34,6 +34,10 @@ func main() {
 	// fmt.Printf("Day 11 - Part One: How many total flashes are there after 100 steps? Answer: [%d]\n", day11.PartOne("day11/input.txt"))
 	// fmt.Printf("Day 11 - Part Two: What is the first step during which all octopuses flash? Answer: [%d]\n", day11.PartTwo("day11/input.txt"))
 
-	fmt.Printf("Day 12 - Part One: How many paths through this cave system are there that visit small caves at most once? Answer: [%d]\n", day12.PartOne("day12/input.txt"))
-	fmt.Printf("Day 12 - Part Two: how many paths through this cave system are there? Answer: [%d]\n", day12.PartTwo("day12/input.txt"))
+	// fmt.Printf("Day 12 - Part One: How many paths through this cave system are there that visit small caves at most once? Answer: [%d]\n", day12.PartOne("day12/input.txt"))
+	// fmt.Printf("Day 12 - Part Two: how many paths through this cave system are there? Answer: [%d]\n", day12.PartTwo("day12/input.txt"))
+
+	// fmt.Printf("Day 13 - Part One: How many dots are visible after completing just the first fold instruction on your transparent paper? Answer: [%d]\n", day13.PartOne("day13/input.txt"))
+	fmt.Printf("Day 13 - Part Two: What code do you use to activate the infrared thermal imaging camera system? Answer: \n")
+	day13.PartTwo("day13/input.txt")
 }
