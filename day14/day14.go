@@ -38,21 +38,11 @@ func PartTwo(puzzleInput string) int {
 	polymerTemplate := inputLines[0]
 	pairInsertions := getPairInsertions(inputLines[2:])
 
-	pairs := make(map[string]int)
-	for i := 0; i < len(polymerTemplate)-1; i++ {
-		pair := polymerTemplate[i : i+2]
-		if _, ok := pairs[pair]; !ok {
-			pairs[pair] = 1
-		} else {
-			pairs[pair]++
-		}
-	}
-
 	for i := 0; i < 40; i++ {
-		pairs = insertPairs2(pairs, pairInsertions)
+		polymerTemplate = insertPairs(polymerTemplate, pairInsertions)
 	}
 
-	answer := CountLetters2(pairs, string(polymerTemplate[len(polymerTemplate)-1]))
+	answer := CountLetters(polymerTemplate)
 	return answer
 }
 
@@ -93,54 +83,6 @@ func CountLetters(polymerTemplate string) int {
 			letterCounts[letter] = 1
 		} else {
 			letterCounts[letter]++
-		}
-	}
-
-	var counts []int
-	for _, count := range letterCounts {
-		counts = append(counts, count)
-	}
-
-	sort.Ints(counts)
-
-	return counts[len(counts)-1] - counts[0]
-}
-
-func insertPairs2(pairs map[string]int, pairInsertions PairInsertions) (newPairs map[string]int) {
-	newPairs = make(map[string]int)
-	for pair, count := range pairs {
-		insertValue, ok := pairInsertions[pair]
-		if !ok {
-			panic("PANIC 😲")
-		}
-
-		leftPair := fmt.Sprintf("%s%s", string(pair[0]), insertValue)
-		rightPair := fmt.Sprintf("%s%s", insertValue, string(pair[1]))
-
-		if _, ok := newPairs[leftPair]; !ok {
-			newPairs[leftPair] = count
-		} else {
-			newPairs[leftPair] += count
-		}
-
-		if _, ok := newPairs[rightPair]; !ok {
-			newPairs[rightPair] = count
-		} else {
-			newPairs[rightPair] += count
-		}
-	}
-
-	return
-}
-
-func CountLetters2(pairs map[string]int, lastLetter string) int {
-	letterCounts := make(map[string]int)
-	letterCounts[lastLetter] = 1
-	for pair, count := range pairs {
-		if _, ok := letterCounts[string(pair[0])]; !ok {
-			letterCounts[string(pair[0])] = count
-		} else {
-			letterCounts[string(pair[0])] += count
 		}
 	}
 
