@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"nobody84/advent-of-code-2021/day13"
+	"nobody84/advent-of-code-2021/day14"
 )
 
 func main() {
@@ -38,6 +38,9 @@ func main() {
 	// fmt.Printf("Day 12 - Part Two: how many paths through this cave system are there? Answer: [%d]\n", day12.PartTwo("day12/input.txt"))
 
 	// fmt.Printf("Day 13 - Part One: How many dots are visible after completing just the first fold instruction on your transparent paper? Answer: [%d]\n", day13.PartOne("day13/input.txt"))
-	fmt.Printf("Day 13 - Part Two: What code do you use to activate the infrared thermal imaging camera system? Answer: \n")
-	day13.PartTwo("day13/input.txt")
+	// fmt.Printf("Day 13 - Part Two: What code do you use to activate the infrared thermal imaging camera system? Answer: \n")
+	// day13.PartTwo("day13/input.txt")
+
+	// fmt.Printf("Day 14 - Part One: What do you get if you take the quantity of the most common element and subtract the quantity of the least common element? Answer: [%d]\n", day14.PartOne("day14/input.txt"))
+	fmt.Printf("Day 14 - Part Two: What do you get if you take the quantity of the most common element and subtract the quantity of the least common element? Answer: [%d]\n", day14.PartTwo("day14/input.txt"))
 }
