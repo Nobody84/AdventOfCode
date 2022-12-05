@@ -12,6 +12,9 @@ namespace AOC2022
             var day2 = new Day2();
             Console.WriteLine($"Day 2 Part 1: Answer={day2.PartOne()}");
             Console.WriteLine($"Day 2 Part 2: Answer={day2.PartTwo()}");
+            var day3 = new Day3();
+            Console.WriteLine($"Day 3 Part 1: Answer={day3.PartOne()}");
+            Console.WriteLine($"Day 3 Part 2: Answer={day3.PartTwo()}");
 
             Console.ReadKey();
         }
