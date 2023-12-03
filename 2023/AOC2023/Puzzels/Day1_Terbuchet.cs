@@ -1,4 +1,4 @@
-﻿namespace AOC2023.Core.Puzzels;
+﻿namespace AOC2023.Puzzels;
 
 public class Day1_Terbuchet
 {

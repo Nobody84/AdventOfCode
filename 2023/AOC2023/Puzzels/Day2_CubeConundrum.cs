@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace AOC2023.Core.Puzzels;
+namespace AOC2023.Puzzels;
 
 public class Day2_CubeConundrum
 {
