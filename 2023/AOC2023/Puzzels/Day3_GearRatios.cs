@@ -1,6 +1,4 @@
 ﻿using AOC2023.Puzzels.Day3;
-using System.Drawing;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace AOC2023.Puzzels;
@@ -72,4 +70,3 @@ public class Day3_GearRatios
         return gearRations.Sum();
     }
 }
-
