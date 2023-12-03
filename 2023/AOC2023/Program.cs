@@ -11,4 +11,5 @@ using AOC2023.Puzzels;
 
 var day3 = new Day3_GearRatios();
 Console.WriteLine($"Day3 - Part1: {day3.Part1()}");
+Console.WriteLine($"Day3 - Part2: {day3.Part2()}");
 

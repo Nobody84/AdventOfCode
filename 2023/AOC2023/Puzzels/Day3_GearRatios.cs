@@ -14,7 +14,7 @@ public class Day3_GearRatios
 
         var lines = File.ReadAllLines("Inputs/Day3_Part1.txt");
         var numbers = new List<Number>();
-        var symbols = new List<Point>();
+        var symbols = new List<Symbol>();
 
         var y = 0;
         foreach (var line in lines)
@@ -28,7 +28,7 @@ public class Day3_GearRatios
             var symbolMatches = symbolRegex.Matches(line);
             foreach (Match match in symbolMatches)
             {
-                symbols.Add(new Point(match.Index, y));
+                symbols.Add(new Symbol { X = match.Index, Y = y, Value = match.Value });
             }
 
             y++;
@@ -41,8 +41,35 @@ public class Day3_GearRatios
 
     public int Part2()
     {
+        var numberRegex = new Regex(@"(\d+)");
+        var symbolRegex = new Regex(@"([\*]{1})");
 
-        return 0;
+        var lines = File.ReadAllLines("Inputs/Day3_Part2.txt");
+        var numbers = new List<Number>();
+        var symbols = new List<Symbol>();
+
+        var y = 0;
+        foreach (var line in lines)
+        {
+            var numberMatches = numberRegex.Matches(line);
+            foreach (Match match in numberMatches)
+            {
+                numbers.Add(new Number { X = match.Index, Y = y, Value = match.Value });
+            }
+
+            var symbolMatches = symbolRegex.Matches(line);
+            foreach (Match match in symbolMatches)
+            {
+                symbols.Add(new Symbol { X = match.Index, Y = y, Value = match.Value });
+            }
+
+            y++;
+        }
+
+        symbols.ForEach(s => numbers.ForEach(n => s.AddToAdjacentNumberIfAdjacent(n)));
+        var gearRations = symbols.Where(s => s.AdjacentNumbers.Count == 2).Select(s => s.AdjacentNumbers.Select(a => int.Parse(a.Value)).Aggregate((a1, a2) => a1 * a2));
+
+        return gearRations.Sum();
     }
 }
 
