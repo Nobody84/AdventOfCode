@@ -5,7 +5,7 @@ public class Day1_Terbuchet
     public int Part1()
     {
         var numbers = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-        var lines = File.ReadLines("Inputs/Day1_Part1.txt");
+        var lines = File.ReadLines("Inputs/Day1.txt");
         var calibrationsNumber = 0;
         foreach (var line in lines)
         {
@@ -33,7 +33,7 @@ public class Day1_Terbuchet
         };
 
         var numbers = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-        var lines = File.ReadLines("Inputs/Day1_Part2.txt");
+        var lines = File.ReadLines("Inputs/Day1.txt");
         var calibrationsNumber = 0;
         foreach (var line in lines)
         {

@@ -10,7 +10,7 @@ public class Day3_GearRatios
         var numberRegex = new Regex(@"(\d+)");
         var symbolRegex = new Regex(@"([^\d\.]{1})");
 
-        var lines = File.ReadAllLines("Inputs/Day3_Part1.txt");
+        var lines = File.ReadAllLines("Inputs/Day3.txt");
         var numbers = new List<Number>();
         var symbols = new List<Symbol>();
 
@@ -42,7 +42,7 @@ public class Day3_GearRatios
         var numberRegex = new Regex(@"(\d+)");
         var symbolRegex = new Regex(@"([\*]{1})");
 
-        var lines = File.ReadAllLines("Inputs/Day3_Part2.txt");
+        var lines = File.ReadAllLines("Inputs/Day3.txt");
         var numbers = new List<Number>();
         var symbols = new List<Symbol>();
 

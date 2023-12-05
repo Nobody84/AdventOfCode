@@ -13,7 +13,7 @@ public class Day2_CubeConundrum
         var possibleGreen = 13;
         var possibleBlue = 14;
 
-        var lines = File.ReadLines("Inputs/Day2_Part1.txt");
+        var lines = File.ReadLines("Inputs/Day2.txt");
         var games = GetGames(lines);
 
         var possibleGames = new List<int>();
@@ -39,7 +39,7 @@ public class Day2_CubeConundrum
 
     public int Part2()
     {
-        var lines = File.ReadLines("Inputs/Day2_Part2.txt");
+        var lines = File.ReadLines("Inputs/Day2.txt");
         var games = GetGames(lines);
 
         var gamePowers = new List<int>();

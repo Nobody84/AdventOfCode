@@ -9,7 +9,7 @@ public class Day4_Scratchcards
 {
     public int Part1()
     {
-        var lines = File.ReadLines("Inputs/Day4_Part1.txt");
+        var lines = File.ReadLines("Inputs/Day4.txt");
         var cards = GetCards(lines);
 
         return cards.Sum(c => c.GetScore());
@@ -17,7 +17,7 @@ public class Day4_Scratchcards
 
     public int Part2()
     {
-        var lines = File.ReadLines("Inputs/Day4_Part2.txt");
+        var lines = File.ReadLines("Inputs/Day4.txt");
         var cards = GetCards(lines);
 
         var numberOfMatches = cards.ToDictionary(c => c.Id, c => c.GetMatchingNumbers());
