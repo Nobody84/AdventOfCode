@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using AOC2023.Puzzels.Day5;
 using ConsoleTables;
@@ -101,16 +102,22 @@ public class Day5_IfYouGiveASeedAFertilizer
     private List<long> GetLocationNumbers(List<PackOfSeeds> packsOfSeeds, List<SourceDestinationMap> maps)
     {
         var locationNumbers = new ConcurrentBag<long>();
-        var count = 1;
-        Parallel.ForEach(packsOfSeeds, (packOfSeeds) =>
+        var progress = new ConcurrentDictionary<int, double>();
+        var timer = new Timer((state) =>
         {
-            Console.WriteLine($"Pack of Seeds {count}: NumberOfSeeds {packOfSeeds.NumberOfSeeds}");
+            Console.Write($"\rProgress: {string.Join(" , ", progress.Values.Select(v => $"{v:00.00}%"))}");
+        }, null, 0, 10000);
+
+        var sw = Stopwatch.StartNew();
+        Parallel.ForEach(packsOfSeeds, (packOfSeeds) =>
+        {        
             long seedCount = 0;
             for (var seed = packOfSeeds.FirstSeed; seed < packOfSeeds.FirstSeed + packOfSeeds.NumberOfSeeds; seed++)
             {
                 if (seedCount++ % 1000000 == 0)
                 {
-                    Console.WriteLine($"{seedCount} / {packOfSeeds.NumberOfSeeds} | {seedCount * 100.0 / packOfSeeds.NumberOfSeeds:00.##}%");
+                    var p = seedCount * 100.0 / packOfSeeds.NumberOfSeeds;
+                    progress.AddOrUpdate(Task.CurrentId.Value, p, (key, val) => p);
                 }
 
                 var currentMap = maps.First(m => m.SourceType == "seed");
@@ -124,6 +131,8 @@ public class Day5_IfYouGiveASeedAFertilizer
                 locationNumbers.Add(currentValue);
             }
         });
+        Console.WriteLine();
+        Console.WriteLine($"Total execution time: {sw.Elapsed}");
 
         return locationNumbers.ToList();
     }
