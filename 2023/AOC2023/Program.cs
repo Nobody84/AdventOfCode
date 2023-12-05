@@ -13,7 +13,11 @@ using AOC2023.Puzzels;
 //Console.WriteLine($"Day3 - Part1: {day3.Part1()}");
 //Console.WriteLine($"Day3 - Part2: {day3.Part2()}");
 
-var day4 = new Day4_Scratchcards();
-Console.WriteLine($"Day4 - Part1: {day4.Part1()}");
-Console.WriteLine($"Day4 - Part2: {day4.Part2()}");
+//var day4 = new Day4_Scratchcards();
+//Console.WriteLine($"Day4 - Part1: {day4.Part1()}");
+//Console.WriteLine($"Day4 - Part2: {day4.Part2()}");
+
+var day5 = new Day5_IfYouGiveASeedAFertilizer();
+Console.WriteLine($"Day5 - Part1: {day5.Part1()}");
+Console.WriteLine($"Day5 - Part2: {day5.Part2()}");
 

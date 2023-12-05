@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ConsoleTables" Version="2.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Inputs\Day5.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Inputs\Day4.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -17,7 +24,7 @@
     <None Update="Inputs\Day2.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Inputs\Day1txt">
+    <None Update="Inputs\Day1.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
