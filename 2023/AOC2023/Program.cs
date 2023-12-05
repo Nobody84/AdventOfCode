@@ -20,4 +20,3 @@ using AOC2023.Puzzels;
 var day5 = new Day5_IfYouGiveASeedAFertilizer();
 Console.WriteLine($"Day5 - Part1: {day5.Part1()}");
 Console.WriteLine($"Day5 - Part2: {day5.Part2()}");
-

@@ -36,9 +36,9 @@ public class Day5_IfYouGiveASeedAFertilizer
         Console.WriteLine(packsOfSeeds.Sum(p => p.NumberOfSeeds));
         var maps = GetMaps(lines);
 
-        var locationNumbers = this.GetLocationNumbers(packsOfSeeds, maps);
+        var lowestLocationNumber = this.GetLowestLocationNumbers(packsOfSeeds, maps);
 
-        return locationNumbers.Min();
+        return lowestLocationNumber;
     }
 
     private List<SourceDestinationMap> GetMaps(string[] lines)
@@ -99,9 +99,9 @@ public class Day5_IfYouGiveASeedAFertilizer
         return locationNumbers;
     }
 
-    private List<long> GetLocationNumbers(List<PackOfSeeds> packsOfSeeds, List<SourceDestinationMap> maps)
+    private long GetLowestLocationNumbers(List<PackOfSeeds> packsOfSeeds, List<SourceDestinationMap> maps)
     {
-        var locationNumbers = new ConcurrentBag<long>();
+        var lowestLocatioNumber = long.MaxValue;
         var progress = new ConcurrentDictionary<int, double>();
         var timer = new Timer((state) =>
         {
@@ -109,6 +109,7 @@ public class Day5_IfYouGiveASeedAFertilizer
         }, null, 0, 10000);
 
         var sw = Stopwatch.StartNew();
+        var lowestNumberLock = new object();
         Parallel.ForEach(packsOfSeeds, (packOfSeeds) =>
         {        
             long seedCount = 0;
@@ -128,12 +129,21 @@ public class Day5_IfYouGiveASeedAFertilizer
                     currentMap = maps.FirstOrDefault(m => m.SourceType == currentMap.DestinationType);
                 }
                 while (currentMap != null);
-                locationNumbers.Add(currentValue);
+
+                lock (lowestNumberLock)
+                {
+                    if (currentValue < lowestLocatioNumber)
+                    {
+                        lowestLocatioNumber = currentValue;
+                    }
+                }
             }
+
+            progress.AddOrUpdate(Task.CurrentId.Value, 100.0, (key, val) => 100.0);
         });
         Console.WriteLine();
         Console.WriteLine($"Total execution time: {sw.Elapsed}");
 
-        return locationNumbers.ToList();
+        return lowestLocatioNumber;
     }
 }
