@@ -26,19 +26,19 @@ public class Day7_CamelCards
         { 'A', "14" },
         { 'K', "13" },
         { 'Q', "12" },
-        { 'T', "11" },
-        { '9', "10" },
-        { '8', "09" },
-        { '7', "08" },
-        { '6', "07" },
-        { '5', "06" },
-        { '4', "05" },
-        { '3', "04" },
-        { '2', "03" },
-        { 'J', "02" },
+        { 'T', "10" },
+        { '9', "09" },
+        { '8', "08" },
+        { '7', "07" },
+        { '6', "06" },
+        { '5', "05" },
+        { '4', "04" },
+        { '3', "03" },
+        { '2', "02" },
+        { 'J', "01" },
     };
 
-    private enum Hand
+    private enum HandType
     {
         HighCard = 0,
         OnePair,
@@ -49,19 +49,24 @@ public class Day7_CamelCards
         FiveOfAKind,
     }
 
-    private record Play(char[] Cards, int CardValue, int Bet);
-    private record PlayResult (Play Play, Hand Hand, int HandValue);
+    private record Play(char[] Cards, int Bet);
+
+    private record Hand(HandType Type, int HandValue);
+
+    private record PlayResult(Play Play, Hand Hand);
+
 
     public long Part1()
     {
         var lines = File.ReadAllLines("Inputs/Day7.txt");
         var plays = this.GetPlays(lines);
 
-        var handsPerPlay = this.GetHandsFromPlay(plays).OrderBy((p) => (int)p.Value * 10000000000 + p.Key.CardValue);
+        var playResults = this.GetPlayResults(plays).OrderBy((pr) => this.GetValue(pr.Hand));
+
         var result = 0;
-        for (var i = 0; i < handsPerPlay.Count(); i++)
+        for (var i = 0; i < playResults.Count(); i++)
         {
-            result += handsPerPlay.ElementAt(i).Key.Bet * (i + 1);
+            result += playResults.ElementAt(i).Play.Bet * (i + 1);
         }
 
         return result;
@@ -72,19 +77,24 @@ public class Day7_CamelCards
         var lines = File.ReadAllLines("Inputs/Day7.txt");
         var plays = this.GetPlays(lines);
 
-        var handsPerPlay = this.GetHandsFromPlay2(plays).OrderBy((pr) => pr.HandValue);
-        var result = 0;
-        for (var i = 0; i < handsPerPlay.Count(); i++)
+        var playResults = this.GetPlayResults2(plays).OrderBy((pr) => this.GetValue(pr.Hand));
+        foreach (var playResult in playResults)
         {
-            result += handsPerPlay.ElementAt(i).Play.Bet * (i + 1);
+            Console.WriteLine($"{string.Join(null, playResult.Play.Cards)} - {playResult.Hand.Type} - {playResult.Hand.HandValue}");
+        }
+
+        var result = 0;
+        for (var i = 0; i < playResults.Count(); i++)
+        {
+            result += playResults.ElementAt(i).Play.Bet * (i + 1);
         }
 
         return result;
     }
 
-    private Dictionary<Play, Hand> GetHandsFromPlay(IEnumerable<Play> plays)
+    private List<PlayResult> GetPlayResults(IEnumerable<Play> plays)
     {
-        var handsPerPlay = new Dictionary<Play, Hand>();
+        var playResults = new List<PlayResult>();
         foreach (var play in plays)
         {
             var cardsCount = new Dictionary<char, int>();
@@ -94,20 +104,22 @@ public class Day7_CamelCards
                 cardsCount.Add(distinctCard, cardCount);
             }
 
-            handsPerPlay.Add(play, this.GetHand(cardsCount));
+            playResults.Add(new PlayResult(play, new Hand(this.GetHandType(cardsCount), this.CalcHandValue(play.Cards))));
         }
 
-        return handsPerPlay;
+        return playResults;
     }
 
-    private List<PlayResult> GetHandsFromPlay2(IEnumerable<Play> plays)
+    private List<PlayResult> GetPlayResults2(IEnumerable<Play> plays)
     {
-        var handsPerPlay = new List<PlayResult>();
+        var playResults = new List<PlayResult>();
         foreach (var play in plays)
         {
-            var cardsCounts = new List<(Dictionary<char, int>, int)>();
             var distinctCards = play.Cards.Distinct();
-            if (!distinctCards.Contains('J') || distinctCards.All(c => c == 'J'))
+
+            Hand hand;
+
+            if (!distinctCards.Contains('J'))
             {
                 var cardsCount = new Dictionary<char, int>();
                 foreach (var distinctCard in distinctCards)
@@ -116,54 +128,54 @@ public class Day7_CamelCards
                     cardsCount.Add(distinctCard, cardCount);
                 }
 
-                cardsCounts.Add((cardsCount, play.CardValue));
+                hand = new Hand(this.GetHandType(cardsCount), this.CalcHandValue2(play.Cards));
+            }
+            else if (distinctCards.All(c => c == 'J'))
+            {
+                var cardsCount = new Dictionary<char, int>() { { 'A', 5 } };
+                hand = new Hand(this.GetHandType(cardsCount), this.CalcHandValue2(play.Cards));
             }
             else
             {
-                var countOfJ = play.Cards.Count(c => c == 'J');
-                var distinctCardsWithoutJ = distinctCards.Where(c => c != 'J');
-                foreach (var focusedCard in distinctCardsWithoutJ)
+                var possibleHands = new List<Hand>();
+                foreach (var focusedCard in distinctCards.Where(c => c != 'J').ToList())
                 {
+                    var newCards = play.Cards.Select(c => c == 'J' ? focusedCard : c).ToArray();
                     var cardsCount = new Dictionary<char, int>();
-                    foreach (var distinctCard in distinctCardsWithoutJ)
+                    foreach (var distinctCard in distinctCards.Where(c => c != 'J').ToList())
                     {
-                        var cardCount = play.Cards.Count(c => c == distinctCard);
-                        if (distinctCard == focusedCard)
-                        {
-                            cardCount += countOfJ;
-                        }
-
+                        var cardCount = newCards.Count(c => c == distinctCard);
                         cardsCount.Add(distinctCard, cardCount);
                     }
-                    Console.WriteLine($"{string.Join(null, play.Cards)} -> {string.Join(null, play.Cards.Select(c => c == 'J' ? focusedCard : c))} -> {string.Join(null, play.Cards.Select(c => c == 'J' ? focusedCard : c).Select(cardsString => this.cardStrenght[cardsString]))}");
-                    var newCardValue = int.Parse(string.Join(null, play.Cards.Select(c => c == 'J' ? focusedCard : c).Select(cardsString => this.cardStrenght[cardsString])));
-                    cardsCounts.Add((cardsCount, newCardValue));
+
+                    possibleHands.Add(new Hand(this.GetHandType(cardsCount), this.CalcHandValue2(play.Cards)));
                 }
+
+                hand = possibleHands.OrderByDescending(h => this.GetValue(h)).First();
             }
 
-            var highestHand = cardsCounts.Select((c) => (this.GetHand(c.Item1), c.Item2)).OrderByDescending((hand) => (int)hand.Item1 * 10000000000 + hand.Item2).First();
 
-            handsPerPlay.Add(new PlayResult(play, highestHand.Item1, highestHand.Item2));
+            playResults.Add(new PlayResult(play, hand));
         }
 
-        return handsPerPlay;
+        return playResults;
     }
 
-    private Hand GetHand(Dictionary<char, int> cardsCount)
+    private HandType GetHandType(Dictionary<char, int> cardsCount)
     {
         switch (cardsCount.Count)
         {
             case 1:
-                return Hand.FiveOfAKind;
+                return HandType.FiveOfAKind;
             case 2:
                 {
                     if (cardsCount.Any(c => c.Value == 4))
                     {
-                        return Hand.FourOfAKind;
+                        return HandType.FourOfAKind;
                     }
                     else
                     {
-                        return Hand.FullHouse;
+                        return HandType.FullHouse;
                     }
                 }
 
@@ -171,18 +183,18 @@ public class Day7_CamelCards
                 {
                     if (cardsCount.Any(c => c.Value == 3))
                     {
-                        return Hand.ThreeOfAKind;
+                        return HandType.ThreeOfAKind;
                     }
                     else
                     {
-                        return Hand.TwoPair;
+                        return HandType.TwoPair;
                     }
                 }
 
             case 4:
-                return Hand.OnePair;
+                return HandType.OnePair;
             default:
-                return Hand.HighCard;
+                return HandType.HighCard;
         }
     }
 
@@ -192,11 +204,24 @@ public class Day7_CamelCards
         foreach (var line in lines)
         {
             var match = regex.Match(line);
-            var cardsString = match.Groups["cards"].Value;
-            var cardValue = int.Parse(string.Join(null, cardsString.Select(cardsString => this.cardStrenght[cardsString])));
-            var cards = cardsString.ToCharArray();
+            var cards = match.Groups["cards"].Value.ToCharArray();
             var bet = int.Parse(match.Groups["bet"].Value);
-            yield return new Play(cards, cardValue, bet);
+            yield return new Play(cards, bet);
         }
+    }
+
+    private int CalcHandValue(char[] cards)
+    {
+        return int.Parse(string.Join(null, cards.Select(cardsString => this.cardStrenght[cardsString])));
+    }
+
+    private int CalcHandValue2(char[] cards)
+    {
+        return int.Parse(string.Join(null, cards.Select(cardsString => this.cardStrenght2[cardsString])));
+    }
+
+    private long GetValue(Hand hand)
+    {
+        return (int)hand.Type * 10000000000 + hand.HandValue;
     }
 }
