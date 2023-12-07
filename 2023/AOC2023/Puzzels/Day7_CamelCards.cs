@@ -50,6 +50,7 @@ public class Day7_CamelCards
     }
 
     private record Play(char[] Cards, int CardValue, int Bet);
+    private record PlayResult (Play Play, Hand Hand, int HandValue);
 
     public long Part1()
     {
@@ -71,11 +72,11 @@ public class Day7_CamelCards
         var lines = File.ReadAllLines("Inputs/Day7.txt");
         var plays = this.GetPlays(lines);
 
-        var handsPerPlay = this.GetHandsFromPlay2(plays).OrderBy((p) => (int)p.Value * 10000000000 + p.Key.CardValue);
+        var handsPerPlay = this.GetHandsFromPlay2(plays).OrderBy((pr) => pr.HandValue);
         var result = 0;
         for (var i = 0; i < handsPerPlay.Count(); i++)
         {
-            result += handsPerPlay.ElementAt(i).Key.Bet * (i + 1);
+            result += handsPerPlay.ElementAt(i).Play.Bet * (i + 1);
         }
 
         return result;
@@ -99,9 +100,9 @@ public class Day7_CamelCards
         return handsPerPlay;
     }
 
-    private Dictionary<Play, Hand> GetHandsFromPlay2(IEnumerable<Play> plays)
+    private List<PlayResult> GetHandsFromPlay2(IEnumerable<Play> plays)
     {
-        var handsPerPlay = new Dictionary<Play, Hand>();
+        var handsPerPlay = new List<PlayResult>();
         foreach (var play in plays)
         {
             var cardsCounts = new List<(Dictionary<char, int>, int)>();
@@ -134,14 +135,15 @@ public class Day7_CamelCards
 
                         cardsCount.Add(distinctCard, cardCount);
                     }
+                    Console.WriteLine($"{string.Join(null, play.Cards)} -> {string.Join(null, play.Cards.Select(c => c == 'J' ? focusedCard : c))} -> {string.Join(null, play.Cards.Select(c => c == 'J' ? focusedCard : c).Select(cardsString => this.cardStrenght[cardsString]))}");
                     var newCardValue = int.Parse(string.Join(null, play.Cards.Select(c => c == 'J' ? focusedCard : c).Select(cardsString => this.cardStrenght[cardsString])));
                     cardsCounts.Add((cardsCount, newCardValue));
                 }
             }
 
-            var highestHand = cardsCounts.Select((c) => (this.GetHand(c.Item1), c.Item2)).OrderByDescending((hand) => (int)hand.Item1 * 10000000000 + hand.Item2).First().Item1;
+            var highestHand = cardsCounts.Select((c) => (this.GetHand(c.Item1), c.Item2)).OrderByDescending((hand) => (int)hand.Item1 * 10000000000 + hand.Item2).First();
 
-            handsPerPlay.Add(play, highestHand);
+            handsPerPlay.Add(new PlayResult(play, highestHand.Item1, highestHand.Item2));
         }
 
         return handsPerPlay;
