@@ -30,5 +30,5 @@ using AOC2023.Puzzels;
 //Console.WriteLine($"Day7 - Part2: {day7.Part2()}");
 
 var day8 = new Day8_HauntedWasteland();
-Console.WriteLine($"Day8 - Part1: {day8.Part1()}");
+//Console.WriteLine($"Day8 - Part1: {day8.Part1()}");
 Console.WriteLine($"Day8 - Part2: {day8.Part2()}");
