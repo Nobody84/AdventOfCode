@@ -31,9 +31,13 @@ using AOC2023.Puzzels;
 
 //var day8 = new Day8_HauntedWasteland();
 //Console.WriteLine($"Day8 - Part1: {day8.Part1()}");
-//Console.WriteLine($"Day8 - Part2: {day8.Part2()}")
+//Console.WriteLine($"Day8 - Part2: {day8.Part2()}");
 
-var day9 = new Day9_MirageMaintenance();
-Console.WriteLine($"Day9 - Part1: {day9.Part1()}");
-Console.WriteLine($"Day9 - Part2: {day9.Part2()}");
+//var day9 = new Day9_MirageMaintenance();
+//Console.WriteLine($"Day9 - Part1: {day9.Part1()}");
+//Console.WriteLine($"Day9 - Part2: {day9.Part2()}");
+
+var day10 = new Day10_PipeMaze();
+Console.WriteLine($"Day10 - Part1: {day10.Part1()}");
+Console.WriteLine($"Day10 - Part2: {day10.Part2()}");
 
