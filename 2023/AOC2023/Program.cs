@@ -37,7 +37,11 @@ using AOC2023.Puzzels;
 //Console.WriteLine($"Day9 - Part1: {day9.Part1()}");
 //Console.WriteLine($"Day9 - Part2: {day9.Part2()}");
 
-var day10 = new Day10_PipeMaze();
-Console.WriteLine($"Day10 - Part1: {day10.Part1()}");
-Console.WriteLine($"Day10 - Part2: {day10.Part2()}");
+//var day10 = new Day10_PipeMaze();
+//Console.WriteLine($"Day10 - Part1: {day10.Part1()}");
+//Console.WriteLine($"Day10 - Part2: {day10.Part2()}");
+
+var day11 = new Day11_CosmicExpansion();
+Console.WriteLine($"Day11 - Part1: {day11.Part1()}");
+Console.WriteLine($"Day11 - Part2: {day11.Part2()}");
 
