@@ -25,9 +25,9 @@ using AOC2023.Puzzels;
 //Console.WriteLine($"Day6 - Part1: {day6.Part1()}");
 //Console.WriteLine($"Day6 - Part2: {day6.Part2()}");
 
-//var day7 = new Day7_CamelCards();
-//Console.WriteLine($"Day7 - Part1: {day7.Part1()}");
-//Console.WriteLine($"Day7 - Part2: {day7.Part2()}");
+var day7 = new Day7_CamelCards();
+Console.WriteLine($"Day7 - Part1: {day7.Part1()}");
+Console.WriteLine($"Day7 - Part2: {day7.Part2()}");
 
 //var day8 = new Day8_HauntedWasteland();
 //Console.WriteLine($"Day8 - Part1: {day8.Part1()}");
