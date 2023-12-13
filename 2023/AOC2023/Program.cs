@@ -25,9 +25,9 @@ using AOC2023.Puzzels;
 //Console.WriteLine($"Day6 - Part1: {day6.Part1()}");
 //Console.WriteLine($"Day6 - Part2: {day6.Part2()}");
 
-var day7 = new Day7_CamelCards();
-Console.WriteLine($"Day7 - Part1: {day7.Part1()}");
-Console.WriteLine($"Day7 - Part2: {day7.Part2()}");
+//var day7 = new Day7_CamelCards();
+//Console.WriteLine($"Day7 - Part1: {day7.Part1()}");
+//Console.WriteLine($"Day7 - Part2: {day7.Part2()}");
 
 //var day8 = new Day8_HauntedWasteland();
 //Console.WriteLine($"Day8 - Part1: {day8.Part1()}");
@@ -41,7 +41,11 @@ Console.WriteLine($"Day7 - Part2: {day7.Part2()}");
 //Console.WriteLine($"Day10 - Part1: {day10.Part1()}");
 //Console.WriteLine($"Day10 - Part2: {day10.Part2()}");
 
-var day11 = new Day11_CosmicExpansion();
-Console.WriteLine($"Day11 - Part1: {day11.Part1()}");
-Console.WriteLine($"Day11 - Part2: {day11.Part2()}");
+//var day11 = new Day11_CosmicExpansion();
+//Console.WriteLine($"Day11 - Part1: {day11.Part1()}");
+//Console.WriteLine($"Day11 - Part2: {day11.Part2()}");
+
+var day13 = new Day13_PointOfIncidence();
+Console.WriteLine($"Day13 - Part1: {day13.Part1()}");
+Console.WriteLine($"Day13 - Part2: {day13.Part2()}");
 
