@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 public class Day13_PointOfIncidence
 {
-    record Mirror(Direction Direction, int Position);
+    record Mirror(int BlockId, Direction Direction, int Position);
 
     private enum Direction
     {
@@ -37,7 +37,13 @@ public class Day13_PointOfIncidence
         }
 
         blocks.Add(currentBlock);
+        var mirrors = FindMirrors(blocks);
 
+        return mirrors.Sum(m => m.Direction == Direction.Horizontal ? 100 * m.Position : m.Position);
+    }
+
+    private static List<Mirror> FindMirrors(List<List<string>> blocks)
+    {
         var mirrors = new List<Mirror>();
         var blockNumber = 0;
         foreach (var rows in blocks)
@@ -47,39 +53,33 @@ public class Day13_PointOfIncidence
             // If we found a vertical mirror, we don't need to check for a horizontal mirror
             if (mirrorPosition != 0)
             {
-                Console.WriteLine($"[{blockNumber}] Vertical {mirrorPosition}");
-                PrintBlock(rows, new Mirror(Direction.Vertical, mirrorPosition));
-                mirrors.Add(new Mirror(Direction.Vertical, mirrorPosition));
+                var verticalMirror = new Mirror(blockNumber, Direction.Vertical, mirrorPosition);
+                mirrors.Add(verticalMirror);
                 continue;
             }
 
             var columnNumbers = Enumerable.Range(0, rows[0].Length);
             var columns = columnNumbers.Select((_, idx) => new string(rows.Select(row => row[idx]).ToArray())).ToList();
             mirrorPosition = FindMirrorPosition(columns);
-            if (mirrorPosition == 0)
+            if (mirrorPosition != 0)
             {
-                Console.WriteLine($"[{blockNumber}] NONE");
-                PrintBlock(rows, new Mirror(Direction.None, mirrorPosition));
-                continue;
+                var horizontalMirror = new Mirror(blockNumber, Direction.Horizontal, mirrorPosition);
+                mirrors.Add(horizontalMirror);
             }
-
-            Console.WriteLine($"[{blockNumber}] Horizontal {mirrorPosition}");
-            PrintBlock(rows, new Mirror(Direction.Horizontal, mirrorPosition));
-            mirrors.Add(new Mirror(Direction.Horizontal, mirrorPosition));
         }
 
-        return mirrors.Sum(m => m.Direction == Direction.Horizontal ? 100 * m.Position : m.Position);
+        return mirrors;
     }
 
     private static int FindMirrorPosition(List<string> lines)
     {
-        var mirrorPosition = 0; 
+        var mirrorPosition = 0;
         var width = lines[0].Length;
         for (var x = 1; x < width; x++)
         {
             var equal = true;
             foreach (var line in lines)
-            {           
+            {
                 var firstPart = line.Substring(0, x);
                 var secondPart = line.Substring(x);
                 var compairWidth = Math.Min(firstPart.Length, secondPart.Length);
@@ -107,13 +107,13 @@ public class Day13_PointOfIncidence
             for (var y = 0; y < block.Count; y++)
             {
                 Console.WriteLine(block[y]);
-                if (y == mirror.Position-1)
+                if (y == mirror.Position - 1)
                 {
                     Console.WriteLine(new string('-', block[y].Length));
-                }                
+                }
             }
         }
-        else if(mirror.Direction == Direction.Vertical)
+        else if (mirror.Direction == Direction.Vertical)
         {
             foreach (var line in block)
             {
