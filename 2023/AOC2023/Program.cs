@@ -41,7 +41,15 @@ using AOC2023.Puzzels;
 //Console.WriteLine($"Day10 - Part1: {day10.Part1()}");
 //Console.WriteLine($"Day10 - Part2: {day10.Part2()}");
 
+//var day11 = new Day11_CosmicExpansion();
+//Console.WriteLine($"Day11 - Part1: {day11.Part1()}");
+//Console.WriteLine($"Day11 - Part2: {day11.Part2()}");
+
 var day12 = new Day12_HotSprings();
 Console.WriteLine($"Day12 - Part1: {day12.Part1()}");
 Console.WriteLine($"Day12 - Part2: {day12.Part2()}");
+
+var day13 = new Day13_PointOfIncidence();
+Console.WriteLine($"Day13 - Part1: {day13.Part1()}");
+Console.WriteLine($"Day13 - Part2: {day13.Part2()}");
 
