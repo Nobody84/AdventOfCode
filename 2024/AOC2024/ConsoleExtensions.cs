@@ -29,21 +29,6 @@ namespace AOC2024
             Console.ResetColor();
         }
 
-        public static void WriteLine(char message, ConsoleColor color)
-        {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            if (color != ConsoleColor.Black)
-            {
-                Console.ForegroundColor = color;
-            }
-            else
-            {
-                Console.ResetColor();
-            }
-
-            Console.WriteLine(message);
-            Console.ResetColor();
-        }
         public static void Write(string message, ConsoleColor color)
         {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
@@ -60,20 +45,24 @@ namespace AOC2024
             Console.ResetColor();
         }
 
+        public static void WriteLine(char message, ConsoleColor color)
+        {
+            WriteLine($"{message}", color);
+        }
+
         public static void Write(char message, ConsoleColor color)
         {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            if (color != ConsoleColor.Black)
-            {
-                Console.ForegroundColor = color;
-            }
-            else
-            {
-                Console.ResetColor();
-            }
+            Write($"{message}", color);
+        }
 
-            Console.Write(message);
-            Console.ResetColor();
+        public static void WriteLine(int message, ConsoleColor color)
+        {
+            WriteLine($"{message}", color);
+        }
+
+        public static void Write(int message, ConsoleColor color)
+        {
+            Write($"{message}", color);
         }
     }
 }
