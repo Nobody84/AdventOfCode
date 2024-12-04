@@ -61,6 +61,6 @@ public class Day2_RedNosedReports
 
     public int Part2()
     {
-
+        return 0;
     }
 }
