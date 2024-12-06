@@ -1,9 +1,6 @@
-﻿using static AOC2024.Puzzels.Day5_PrintQueue;
-
-namespace AOC2024.Puzzels;
+﻿namespace AOC2024.Puzzels;
 
 using System.Collections.Generic;
-using static AOC2024.Puzzels.Day5_PrintQueue;
 
 public class Day5_PrintQueue
 {
