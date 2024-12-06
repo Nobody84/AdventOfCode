@@ -63,7 +63,7 @@ public class Day6_GuardGallivant
             switch (guardOrientation)
             {
                 case Orientation.Up:
-                    nextObsticalPosition = obsticalPositions.FirstOrDefault(p => p.X == guardPosition.X && p.Y < guardPosition.Y);
+                    nextObsticalPosition = obsticalPositions.LastOrDefault(p => p.X == guardPosition.X && p.Y < guardPosition.Y);
                     if (nextObsticalPosition != null)
                     {
                         for (var y = guardPosition.Y - 1; y > nextObsticalPosition.Y; y--)
@@ -123,7 +123,7 @@ public class Day6_GuardGallivant
                     }
                     break;
                 case Orientation.Left:
-                    nextObsticalPosition = obsticalPositions.FirstOrDefault(p => p.X < guardPosition.X && p.Y == guardPosition.Y);
+                    nextObsticalPosition = obsticalPositions.LastOrDefault(p => p.X < guardPosition.X && p.Y == guardPosition.Y);
                     if (nextObsticalPosition != null)
                     {
                         for (var x = guardPosition.X - 1; x > nextObsticalPosition.X; x--)
@@ -167,7 +167,7 @@ public class Day6_GuardGallivant
             {
                 var count = visitedPositions.Where(p => p.X == x && p.Y == y).Count();
                 var color = ConsoleColor.White;
-                var character = $"{count}"[0];
+                var character = inputLine[x] != '#' ? $"{count}"[0] : '#';
                 switch (count)
                 {
                     case 0:
