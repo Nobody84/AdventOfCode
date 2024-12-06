@@ -54,7 +54,7 @@ public class Day6_GuardGallivant
             }
         }
 
-        var visitedPositions = TracePath(obstaclePositions, yMax, xMax, startPosition, startOrientation);
+        var visitedPositions = TracePath(obstaclePositions.OrderBy(p => p.Y).ThenBy(p => p.X).ToList(), yMax, xMax, startPosition, startOrientation);
 
         //PrintMaze(inputLines, visitedPositions, startPosition);
         return visitedPositions.Distinct().Count();
@@ -109,13 +109,8 @@ public class Day6_GuardGallivant
             alteredObstaclePositions = alteredObstaclePositions.OrderBy(p => p.Y).ThenBy(p => p.X).ToList();
             var looped = FindLoop(alteredObstaclePositions, yMax, xMax, startPosition, startOrientation, out List<PositionWithOrientation> visitedPositions2);
             if (looped)
-            {
-                ConsoleExtensions.WriteLine($"Looped", ConsoleColor.Green);
+            {                
                 count++;
-            }
-            else
-            {
-                ConsoleExtensions.WriteLine("Escaped", ConsoleColor.Red);
             }
         });
 
