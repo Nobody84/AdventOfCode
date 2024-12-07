@@ -21,7 +21,10 @@ using AOC2024.Puzzels;
 //Console.WriteLine($"Day5 - Part1: {day5.Part1()}");
 //Console.WriteLine($"Day5 - Part2: {day5.Part2()}");
 
-var day6 = new Day6_GuardGallivant();
-Console.WriteLine($"Day6 - Part1: {day6.Part1()}");
-Console.WriteLine($"Day6 - Part2: {day6.Part2()}");
+//var day6 = new Day6_GuardGallivant();
+//Console.WriteLine($"Day6 - Part1: {day6.Part1()}");
+//Console.WriteLine($"Day6 - Part2: {day6.Part2()}");
+
+var day7 = new Day7_BridgeRepair();
+day7.Run();
 
