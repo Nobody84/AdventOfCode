@@ -40,7 +40,7 @@ public class Day7_BridgeRepair : PuzzelBase
 
         foreach (var equation in equations)
         {
-            if (Calculate(equation.ExpectedResult, equation.Terms[0], equation.Terms, operators, 1))
+            if (Check(equation.ExpectedResult, equation.Terms[0], equation.Terms, operators, 1))
             {
                 //Console.WriteLine($"Equation: {equation.ExpectedResult} = {string.Join(" ", equation.Terms)}");
                 totalCalibrationResult += equation.ExpectedResult;
@@ -60,7 +60,7 @@ public class Day7_BridgeRepair : PuzzelBase
         return 0;
     }
 
-    private static bool Calculate(ulong expectedResult, ulong currentResult, ulong[] terms, char[] operators, int pos)
+    private static bool Check(ulong expectedResult, ulong currentResult, ulong[] terms, char[] operators, int pos)
     {
         var correctResult = false;
         foreach (var op in operators)
@@ -88,7 +88,7 @@ public class Day7_BridgeRepair : PuzzelBase
                 return false;
             }
 
-            correctResult = Calculate(expectedResult, newResult, terms, operators, pos + 1);
+            correctResult = Check(expectedResult, newResult, terms, operators, pos + 1);
             if(correctResult)
             {
                 break;
