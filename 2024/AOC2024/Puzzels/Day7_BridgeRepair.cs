@@ -1,6 +1,7 @@
 ﻿namespace AOC2024.Puzzels;
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -42,7 +43,7 @@ public class Day7_BridgeRepair : PuzzelBase
         {
             if (Check(equation.ExpectedResult, equation.Terms[0], equation.Terms, operators, 1))
             {
-                //Console.WriteLine($"Equation: {equation.ExpectedResult} = {string.Join(" ", equation.Terms)}");
+                Console.WriteLine($"Equation: {equation.ExpectedResult} = {string.Join(" ", equation.Terms)}");
                 totalCalibrationResult += equation.ExpectedResult;
             }
         }
@@ -77,15 +78,14 @@ public class Day7_BridgeRepair : PuzzelBase
                 continue;
             }
 
-            if (newResult == expectedResult)
-            {
-                correctResult = true;
-                break;
-            }
-
             if (pos == terms.Length - 1)
             {
-                return false;
+                if (newResult == expectedResult)
+                {
+                    return true;
+                }
+
+                continue;
             }
 
             correctResult = Check(expectedResult, newResult, terms, operators, pos + 1);
