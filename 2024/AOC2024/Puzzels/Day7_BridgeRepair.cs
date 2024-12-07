@@ -8,8 +8,6 @@ using System.Text.RegularExpressions;
 public class Day7_BridgeRepair : PuzzelBase
 {
     private readonly Regex numberRegex = new(@"(\d+)");
-    private char[] operators = { '*', '+' };
-
     private record Equation(ulong ExpectedResult, ulong[] Terms);
 
     private List<Equation> equations = new();
@@ -21,6 +19,7 @@ public class Day7_BridgeRepair : PuzzelBase
 
     protected override void PreparePart1(string inputFilePath)
     {
+        equations.Clear();
         var inputLines = File.ReadLines(inputFilePath).ToList();
         for (var i = 0; i < inputLines.Count; i++)
         {
@@ -35,6 +34,7 @@ public class Day7_BridgeRepair : PuzzelBase
 
     protected override object Part1()
     {
+        char[] operators = [ '*', '+' ];
         var combinationDict = new Dictionary<int, List<char[]>>();
 
         ulong totalCalibrationResult = 0u;
@@ -43,7 +43,6 @@ public class Day7_BridgeRepair : PuzzelBase
         {
             if (Check(equation.ExpectedResult, equation.Terms[0], equation.Terms, operators, 1))
             {
-                Console.WriteLine($"Equation: {equation.ExpectedResult} = {string.Join(" ", equation.Terms)}");
                 totalCalibrationResult += equation.ExpectedResult;
             }
         }
@@ -58,7 +57,20 @@ public class Day7_BridgeRepair : PuzzelBase
 
     protected override object Part2()
     {
-        return 0;
+        char[] operators = [ '*', '+', '|' ]; 
+        var combinationDict = new Dictionary<int, List<char[]>>();
+
+        ulong totalCalibrationResult = 0u;
+
+        foreach (var equation in equations)
+        {
+            if (Check(equation.ExpectedResult, equation.Terms[0], equation.Terms, operators, 1))
+            {
+               totalCalibrationResult+=equation.ExpectedResult;
+            }
+        }
+
+        return totalCalibrationResult;
     }
 
     private static bool Check(ulong expectedResult, ulong currentResult, ulong[] terms, char[] operators, int pos)
@@ -70,6 +82,7 @@ public class Day7_BridgeRepair : PuzzelBase
             {
                 '+' => currentResult + terms[pos],
                 '*' => currentResult * terms[pos],
+                '|' => ulong.Parse($"{currentResult}{terms[pos]}"),
                 _ => throw new InvalidOperationException()
             };
 
@@ -89,7 +102,7 @@ public class Day7_BridgeRepair : PuzzelBase
             }
 
             correctResult = Check(expectedResult, newResult, terms, operators, pos + 1);
-            if(correctResult)
+            if (correctResult)
             {
                 break;
             }
