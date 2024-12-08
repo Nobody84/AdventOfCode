@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics;
+using System.Globalization;
 
 namespace AOC2024
 {
@@ -28,7 +29,8 @@ namespace AOC2024
         {
             Console.WriteLine($"Day {this.Day} - {this.Name}");
             this.PreparePart1($"Inputs/Day{Day}.txt");
-            var sw = System.Diagnostics.Stopwatch.StartNew();
+            var sw = new Stopwatch();
+            sw.Restart();
             var result1 = Part1();
             sw.Stop();
             Console.WriteLine($"Part 1: {result1}, Time={FormatTime(sw.Elapsed.TotalMicroseconds)}");
@@ -44,17 +46,17 @@ namespace AOC2024
         {
             if (microseconds < 1000)
             {
-                return $"{microseconds} µs";
+                return $"{microseconds:F3} µs";
             }
             else if (microseconds < 1_000_000)
             {
                 double milliseconds = microseconds / 1000.0;
-                return $"{milliseconds.ToString("F4", CultureInfo.InvariantCulture)} ms";
+                return $"{milliseconds:F3} ms";
             }
             else
             {
                 double seconds = microseconds / 1_000_000.0;
-                return $"{seconds.ToString("F4", CultureInfo.InvariantCulture)} s";
+                return $"{seconds:F3} s";
             }
         }
     }

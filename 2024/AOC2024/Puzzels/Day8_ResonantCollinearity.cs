@@ -34,37 +34,10 @@ public class Day8_ResonantCollinearity : PuzzelBase
 
     protected override object Part1()
     {
-        List<ResonancePoint> resonancePoints = new();
+        var resonancePoints = FindResonancePoints(this.gridDimension, this.antennaGroups, 1, 1);
 
-        foreach (var antennaGroup in antennaGroups)
-        {
-            var antennaType = antennaGroup.Key;
-            var antennaCombinations = antennaGroup.SelectMany((a, i) => antennaGroup.Skip(i + 1), (a1, a2) => (a1, a2));
-
-            foreach (var antennaCombination in antennaCombinations)
-            {
-                ExtractCoordinates(antennaCombination, out int x1, out int y1, out int x2, out int y2);
-                var newResonancePoint1 = new ResonancePoint(y2 + y2 - y1, x2 + x2 - x1);
-                var newResonancePoint2 = new ResonancePoint(y1 + y1 - y2, x1 + x1 - x2);
-
-                // Check if within grid
-                if (!(newResonancePoint1.Y < 0 || newResonancePoint1.Y >= gridDimension.Height ||
-                      newResonancePoint1.X < 0 || newResonancePoint1.X >= gridDimension.Width))
-                {
-                    resonancePoints.Add(newResonancePoint1);
-                }
-
-                if (!(newResonancePoint2.Y < 0 || newResonancePoint2.Y >= gridDimension.Height ||
-                      newResonancePoint2.X < 0 || newResonancePoint2.X >= gridDimension.Width))
-                {
-                    resonancePoints.Add(newResonancePoint2);
-                }
-            }
-        }
-
-        var distinctResonancePoints = resonancePoints.Distinct().ToList();
         //PrintGrid(gridDimension, resonancePoints, antennaGroups.SelectMany(g => g).ToList());
-        return distinctResonancePoints.Count();
+        return resonancePoints.Count();
     }
 
     protected override void PreparePart2(string inputFilePath)
@@ -74,55 +47,10 @@ public class Day8_ResonantCollinearity : PuzzelBase
 
     protected override object Part2()
     {
-        List<ResonancePoint> resonancePoints = new();
+        var resonancePoints = FindResonancePoints(this.gridDimension, this.antennaGroups, 0, -1);
 
-        foreach (var antennaGroup in antennaGroups)
-        {
-            var antennaType = antennaGroup.Key;
-            var antennaCombinations = antennaGroup.SelectMany((a, i) => antennaGroup.Skip(i + 1), (a1, a2) => (a1, a2));
-
-            foreach (var antennaCombination in antennaCombinations)
-            {
-                ExtractCoordinates(antennaCombination, out int x1, out int y1, out int x2, out int y2);
-                var step = 0;
-                var dY = y2 - y1;
-                var dX = x2 - x1;
-                while (true)
-                {
-                    var newResonancePoint1 = new ResonancePoint(y2 + step * dY, x2 + step * dX);
-
-                    // Check if outside the grid
-                    if (newResonancePoint1.Y < 0 || newResonancePoint1.Y >= gridDimension.Height ||
-                        newResonancePoint1.X < 0 || newResonancePoint1.X >= gridDimension.Width)
-                    {
-                        break;
-                    }
-
-                    resonancePoints.Add(newResonancePoint1);
-                    step++;
-                }
-
-                step = 0;
-                while (true)
-                {
-                    var newResonancePoint1 = new ResonancePoint(y1 - step * dY, x1 - step * dX);
-
-                    // Check if outside the grid
-                    if (newResonancePoint1.Y < 0 || newResonancePoint1.Y >= gridDimension.Height ||
-                        newResonancePoint1.X < 0 || newResonancePoint1.X >= gridDimension.Width)
-                    {
-                        break;
-                    }
-
-                    resonancePoints.Add(newResonancePoint1);
-                    step++;
-                }
-            }
-        }
-
-        var distinctResonancePoints = resonancePoints.Distinct().ToList();
         //PrintGrid(gridDimension, resonancePoints, antennaGroups.SelectMany(g => g).ToList());
-        return distinctResonancePoints.Count();
+        return resonancePoints.Count();
     }
 
     private static void PrintGrid(GridDimension gridDimension, List<ResonancePoint> resonancePoints, List<Antenna> antennas)
@@ -157,5 +85,65 @@ public class Day8_ResonantCollinearity : PuzzelBase
         y1 = antennaCombination.a1.Y;
         x2 = antennaCombination.a2.X;
         y2 = antennaCombination.a2.Y;
+    }
+
+    private static List<ResonancePoint> FindResonancePoints(GridDimension gridDimension, List<IGrouping<char, Antenna>> antennaGroups, int startStep, int maxSteps)
+    {
+        List<ResonancePoint> resonancePoints = new();
+        foreach (var antennaGroup in antennaGroups)
+        {
+            var antennaType = antennaGroup.Key;
+            var antennaCombinations = antennaGroup.SelectMany((a, i) => antennaGroup.Skip(i + 1), (a1, a2) => (a1, a2));
+
+            foreach (var antennaCombination in antennaCombinations)
+            {
+                ExtractCoordinates(antennaCombination, out int x1, out int y1, out int x2, out int y2);
+                var step = startStep;
+                var dY = y2 - y1;
+                var dX = x2 - x1;
+                while (true)
+                {
+                    var newResonancePoint1 = new ResonancePoint(y2 + step * dY, x2 + step * dX);
+
+                    // Check if outside the grid
+                    if (newResonancePoint1.Y < 0 || newResonancePoint1.Y >= gridDimension.Height ||
+                        newResonancePoint1.X < 0 || newResonancePoint1.X >= gridDimension.Width)
+                    {
+                        break;
+                    }
+
+                    resonancePoints.Add(newResonancePoint1);
+                    step++;
+
+                    if (maxSteps > 0 && step - startStep >= maxSteps)
+                    {
+                        break;
+                    }
+                }
+
+                step = startStep;
+                while (true)
+                {
+                    var newResonancePoint1 = new ResonancePoint(y1 - step * dY, x1 - step * dX);
+
+                    // Check if outside the grid
+                    if (newResonancePoint1.Y < 0 || newResonancePoint1.Y >= gridDimension.Height ||
+                        newResonancePoint1.X < 0 || newResonancePoint1.X >= gridDimension.Width)
+                    {
+                        break;
+                    }
+
+                    resonancePoints.Add(newResonancePoint1);
+                    step++;
+
+                    if (maxSteps > 0 && step - startStep >= maxSteps)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return resonancePoints.Distinct().ToList();
     }
 }
