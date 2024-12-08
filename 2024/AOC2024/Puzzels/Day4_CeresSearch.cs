@@ -1,27 +1,30 @@
 ﻿namespace AOC2024.Puzzels;
 
-using System.Text.RegularExpressions;
-
-public class Day4_CeresSearch
+public class Day4_CeresSearch : PuzzelBase
 {
-    private const string mullRegexPattern = @"mul\s*\(\s*(?<X>[\d]{1,3})\s*,(?<Y>[\d]{1,3})\s*\)";
-    private const string dontRegexPattern = @"don't\(\)(?:.|\n)*?do\(\)";
-    private const string lastDontRegexPattern = @"don't\(\)(?:.|\n)*";
+    private char[][] inputMatrix;
+
+    public Day4_CeresSearch() 
+        : base(4, "Ceres Search")
+    {
+    }
 
     record Position(int X, int Y);
     record Offset(int X, int Y);
-
-    public int Part1()
+    protected override void PreparePart1(string inputPath)
     {
-        var count = 0;
-        var inputLines = File.ReadLines("Inputs/Day4.txt").ToList();
+        var inputLines = File.ReadLines(inputPath).ToList();
 
-        char[][] inputMatrix = new char[inputLines.Count][];
+        this.inputMatrix = new char[inputLines.Count][];
         for (var i = 0; i < inputLines.Count; i++)
         {
             inputMatrix[i] = inputLines[i].ToCharArray();
         }
+    }
 
+    protected override object Part1()
+    {
+        var count = 0;
         var startPositions = new List<Position>();
         for (var y = 0; y < inputMatrix.Length; y++)
         {
@@ -77,17 +80,8 @@ public class Day4_CeresSearch
         return count;
     }
 
-    public int Part2()
+    protected override object Part2()
     {
-        var count = 0;
-        var inputLines = File.ReadLines("Inputs/Day4.txt").ToList();
-
-        char[][] inputMatrix = new char[inputLines.Count][];
-        for (var i = 0; i < inputLines.Count; i++)
-        {
-            inputMatrix[i] = inputLines[i].ToCharArray();
-        }
-
         var startPositions = new List<Position>();
         for (var y = 0; y < inputMatrix.Length; y++)
         {
@@ -138,27 +132,6 @@ public class Day4_CeresSearch
         }
 
         var xmasPostitions = positionsOfTheAs.GroupBy(p => p).Where(g => g.Count() == 2).Select(g => g.Key);
-
-        //for (var y = 0; y < inputMatrix.Length; y++)
-        //{
-        //    for (var x = 0; x < inputMatrix[y].Length; x++)
-        //    {
-        //        if (xmasPostitions.Any(p => p.X == x && p.Y == y))
-        //        {
-        //            ConsoleExtensions.Write(inputMatrix[y][x], ConsoleColor.Red);
-        //        }
-        //        else if (positionsOfTheAs.Any(p => p.X == x && p.Y == y))
-        //        {
-        //            ConsoleExtensions.Write(inputMatrix[y][x], ConsoleColor.Green);
-        //        }
-        //        else
-        //        {
-        //            Console.Write(inputMatrix[y][x]);
-        //        }
-        //    }
-
-        //    Console.WriteLine();
-        //}
 
         return xmasPostitions.Count();
     }

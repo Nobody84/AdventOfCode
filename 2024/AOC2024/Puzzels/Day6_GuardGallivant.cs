@@ -4,10 +4,16 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text.RegularExpressions;
 
-public class Day6_GuardGallivant
+public class Day6_GuardGallivant : PuzzelBase
 {
     private readonly Regex opsticalRegex = new Regex(@"#{1}");
     private readonly Regex guardRegex = new Regex(@"[<|^|>|v]{1}");
+
+    public Day6_GuardGallivant()
+        : base(6, "Guard Gallivant")
+    {
+    }
+
     private enum Orientation
     {
         Up,
@@ -20,7 +26,7 @@ public class Day6_GuardGallivant
 
     record PositionWithOrientation(int Y, int X, Orientation Orientation);
 
-    public int Part1()
+    protected override object Part1()
     {
         var inputLines = File.ReadLines("Inputs/Day6.txt").ToList();
 
@@ -60,7 +66,7 @@ public class Day6_GuardGallivant
         return visitedPositions.Distinct().Count();
     }
 
-    public int Part2()
+    protected override object Part2()
     {
         var inputLines = File.ReadLines("Inputs/Day6.txt").ToList();
 

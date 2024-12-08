@@ -49,7 +49,7 @@ public class Day8_ResonantCollinearity : PuzzelBase
 
                 // Check if within grid
                 if (!(newResonancePoint1.Y < 0 || newResonancePoint1.Y >= gridDimension.Height ||
-                     newResonancePoint1.X < 0 || newResonancePoint1.X >= gridDimension.Width))
+                      newResonancePoint1.X < 0 || newResonancePoint1.X >= gridDimension.Width))
                 {
                     resonancePoints.Add(newResonancePoint1);
                 }
@@ -85,10 +85,10 @@ public class Day8_ResonantCollinearity : PuzzelBase
             {
                 ExtractCoordinates(antennaCombination, out int x1, out int y1, out int x2, out int y2);
                 var step = 0;
-                while(true)
+                var dY = y2 - y1;
+                var dX = x2 - x1;
+                while (true)
                 {
-                    var dY = y2 - y1;
-                    var dX = x2 - x1;
                     var newResonancePoint1 = new ResonancePoint(y2 + step * dY, x2 + step * dX);
 
                     // Check if outside the grid
@@ -105,9 +105,7 @@ public class Day8_ResonantCollinearity : PuzzelBase
                 step = 0;
                 while (true)
                 {
-                    var dY = y1 - y2;
-                    var dX = x1 - x2;
-                    var newResonancePoint1 = new ResonancePoint(y1 + step * dY, x1 + step * dX);
+                    var newResonancePoint1 = new ResonancePoint(y1 - step * dY, x1 - step * dX);
 
                     // Check if outside the grid
                     if (newResonancePoint1.Y < 0 || newResonancePoint1.Y >= gridDimension.Height ||

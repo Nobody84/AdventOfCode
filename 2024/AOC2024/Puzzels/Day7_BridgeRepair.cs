@@ -1,8 +1,6 @@
 ﻿namespace AOC2024.Puzzels;
 
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 using System.Text.RegularExpressions;
 
 public class Day7_BridgeRepair : PuzzelBase

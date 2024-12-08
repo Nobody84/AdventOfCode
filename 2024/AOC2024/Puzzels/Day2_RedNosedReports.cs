@@ -1,12 +1,23 @@
-﻿namespace AOC2024.Puzzels;
+﻿
+namespace AOC2024.Puzzels;
 
-public class Day2_RedNosedReports
+public class Day2_RedNosedReports : PuzzelBase
 {
-    public int Part1()
-    {
-        var lines = File.ReadLines("Inputs/Day2.txt");
-        var levelsList = lines.Select(l => l.Split(" ").Select(int.Parse).ToArray());
+    private IEnumerable<int[]> levelsList = new List<int[]>();
 
+    public Day2_RedNosedReports() 
+        : base(2, "Red-Nosed Reports")
+    {
+    }
+
+    protected override void PreparePart1(string inputPath)
+    {
+        var lines = File.ReadLines("inputPath");
+        this.levelsList = lines.Select(l => l.Split(" ").Select(int.Parse).ToArray());
+    }
+
+    protected override object Part1()
+    {
         var count = 0;
         foreach (var levels in levelsList)
         {
@@ -47,11 +58,8 @@ public class Day2_RedNosedReports
         return count;
     }
 
-    public int Part2()
+    protected override object Part2()
     {
-        var lines = File.ReadLines("Inputs/Day2.txt");
-        var levelsList = lines.Select(l => l.Split(" ").Select(int.Parse).ToArray());
-
         var count = 0;
         foreach (var levels in levelsList)
         {

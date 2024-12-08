@@ -2,13 +2,17 @@
 
 using System.Collections.Generic;
 
-public class Day5_PrintQueue
+public class Day5_PrintQueue : PuzzelBase
 {
+    public Day5_PrintQueue()
+        : base(5, "Print Queue")
+    {
+    }
 
     record PageOrderRule(int Page1, int Page2);
     record Update(HashSet<int> PageHashSet, List<int> Pages);
 
-    public int Part1()
+    protected override object Part1()
     {
         var count = 0;
         var inputLines = File.ReadLines("Inputs/Day5.txt");
@@ -67,7 +71,7 @@ public class Day5_PrintQueue
         return count;
     }
 
-    public int Part2()
+    protected override object Part2()
     {
         var count = 0;
         var inputLines = File.ReadLines("Inputs/Day5.txt");

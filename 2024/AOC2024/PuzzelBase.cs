@@ -4,31 +4,36 @@ namespace AOC2024
 {
     public abstract class PuzzelBase
     {
-        private readonly int day;
-        private readonly string name;
 
         protected PuzzelBase(int day, string name)
         {
-            this.day = day;
-            this.name = name;
+            this.Day = day;
+            this.Name = name;
         }
 
-        protected abstract void PreparePart1(string inputPath);
+        public int Day { get; private set; }
+
+        public string Name { get; private set; }
+
+        protected virtual void PreparePart1(string inputPath) { }
         protected abstract object Part1();
 
-        protected abstract void PreparePart2(string inputPath);
+        protected virtual void PreparePart2(string inputPath)
+        {
+            this.PreparePart1(inputPath);
+        }
         protected abstract object Part2();
 
         public void Run()
         {
-            Console.WriteLine($"Day {this.day} - {this.name}");
-            this.PreparePart1($"Inputs/Day{day}.txt");
+            Console.WriteLine($"Day {this.Day} - {this.Name}");
+            this.PreparePart1($"Inputs/Day{Day}.txt");
             var sw = System.Diagnostics.Stopwatch.StartNew();
             var result1 = Part1();
             sw.Stop();
             Console.WriteLine($"Part 1: {result1}, Time={FormatTime(sw.Elapsed.TotalMicroseconds)}");
 
-            this.PreparePart2($"Inputs/Day{day}.txt");
+            this.PreparePart2($"Inputs/Day{Day}.txt");
             sw.Restart();
             var result2 = Part2();
             sw.Stop();
