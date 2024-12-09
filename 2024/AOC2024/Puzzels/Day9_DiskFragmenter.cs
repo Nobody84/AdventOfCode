@@ -23,45 +23,46 @@ public class Day9_DiskFragmenter : PuzzelBase
 
     protected override object Part1()
     {
-        var uncompressed = new List<string>(this.input.Length*10);
+        var uncompressedSb = new StringBuilder(this.input.Length*10);
         var fileId = 0;
         for (var i = 0; i < this.input.Length; i++)
         {
             if (i % 2 == 0)
             {
-                uncompressed.AddRange(Enumerable.Repeat(fileId.ToString(), this.input[i]));
+                uncompressedSb.Append(ToString(fileId, this.input[i]));
                 fileId++;
             }
             else
             {
-                uncompressed.AddRange(Enumerable.Repeat(".", this.input[i]));
+                uncompressedSb.Append(new String('.', this.input[i]));
             }
         }
 
-
-        Console.WriteLine(string.Join("", uncompressed));
-        var lastReplacementPos = uncompressed.Count;
-        for (var i = 0; i < uncompressed.Count; i++)
+        var uncompressed = uncompressedSb.ToString().ToCharArray();
+        var lastReplacementPos = uncompressed.Length;
+        for (var i = 0; i < uncompressed.Length; i++)
         {
-            if (uncompressed[i] == "+")
+            if (uncompressed[i] == '+')
             {
                 break;
             }
 
-            if (uncompressed[i] == ".")
+            //Console.WriteLine(string.Join("", uncompressed.Select(u => u.ToString())));
+            if (uncompressed[i] == '.')
             {
                 do
                 {
                     lastReplacementPos--;
-                } while (uncompressed[lastReplacementPos] == ".");
+                } while (uncompressed[lastReplacementPos] == '.');
 
                 uncompressed[i] = uncompressed[lastReplacementPos];
-                uncompressed[lastReplacementPos] = "+";
+                uncompressed[lastReplacementPos] = '+';
             }
         }
-        var compressedDataChar = uncompressed.Where(c => c != "." && c != "+");
-        Console.WriteLine(string.Join("", compressedDataChar));
-        var compressedData = compressedDataChar.Select(decimal.Parse);
+
+        var compressedDataChar = uncompressed.Where(c => c != '.' && c != '+');
+        //Console.WriteLine(string.Join("", compressedDataChar));
+        var compressedData = string.Join("", compressedDataChar).Select(d => decimal.Parse(d.ToString()));
 
         var checksum = compressedData.Select((value, idx) => value * idx).Sum();
         return checksum;
@@ -70,5 +71,15 @@ public class Day9_DiskFragmenter : PuzzelBase
     protected override object Part2()
     {
         return 0;
+    }
+
+    private static string ToString(int value, int count)
+    {
+        var sb = new StringBuilder(count);
+        for (var i = 0; i < count; i++)
+        {
+            sb.Append(value);
+        }
+        return sb.ToString();
     }
 }
