@@ -23,48 +23,49 @@ public class Day9_DiskFragmenter : PuzzelBase
 
     protected override object Part1()
     {
-        var uncompressedSb = new StringBuilder(this.input.Length*10);
+        var uncompressedFile = new List<int>();
+
         var fileId = 0;
-        for (var i = 0; i < this.input.Length; i++)
+        for (int i = 0; i < input.Length; i++)
         {
+            var value = input[i];
             if (i % 2 == 0)
             {
-                uncompressedSb.Append(ToString(fileId, this.input[i]));
+                // value is file length
+                uncompressedFile.AddRange(Enumerable.Repeat(fileId, value));
                 fileId++;
             }
             else
             {
-                uncompressedSb.Append(new String('.', this.input[i]));
+                // value is freespace length, freespace is represented by -1
+                uncompressedFile.AddRange(Enumerable.Repeat(-1, value));
             }
         }
 
-        var uncompressed = uncompressedSb.ToString().ToCharArray();
-        var lastReplacementPos = uncompressed.Length;
-        for (var i = 0; i < uncompressed.Length; i++)
+        var frontIdx = 0;
+        var backIdx = uncompressedFile.Count - 1;
+        do
         {
-            if (uncompressed[i] == '+')
+            while (uncompressedFile[backIdx] == -1)
             {
-                break;
+                backIdx--;
             }
 
-            //Console.WriteLine(string.Join("", uncompressed.Select(u => u.ToString())));
-            if (uncompressed[i] == '.')
+            while (uncompressedFile[frontIdx] != -1)
             {
-                do
-                {
-                    lastReplacementPos--;
-                } while (uncompressed[lastReplacementPos] == '.');
-
-                uncompressed[i] = uncompressed[lastReplacementPos];
-                uncompressed[lastReplacementPos] = '+';
+                frontIdx++;
             }
-        }
 
-        var compressedDataChar = uncompressed.Where(c => c != '.' && c != '+');
-        //Console.WriteLine(string.Join("", compressedDataChar));
-        var compressedData = string.Join("", compressedDataChar).Select(d => decimal.Parse(d.ToString()));
+            uncompressedFile[frontIdx] = uncompressedFile[backIdx];
+            uncompressedFile[backIdx] = -1;
 
-        var checksum = compressedData.Select((value, idx) => value * idx).Sum();
+            frontIdx++;
+            backIdx--;
+
+        } while (frontIdx < backIdx);
+
+        var checksum = uncompressedFile.Where(d => d != -1).Select((d, i) => (decimal)d * i).Sum();
+
         return checksum;
     }
 
