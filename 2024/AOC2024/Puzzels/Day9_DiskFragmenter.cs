@@ -10,15 +10,15 @@ public class Day9_DiskFragmenter : PuzzelBase
 
     private record File
     {
-        public int StartIdx { get; init; }
+        public int StartIdx { get; set; }
         public int Id { get; init; }
         public int Length { get; set; }
     };
 
     private record FreeSpace
     {
-        public int StartIdx { get; init; }
-        public int Length { get; init; }
+        public int StartIdx { get; set; }
+        public int Length { get; set; }
     };
 
     public Day9_DiskFragmenter()
@@ -33,7 +33,7 @@ public class Day9_DiskFragmenter : PuzzelBase
 
     protected override object Part1()
     {
-        var uncompressedFile = new List<int>();
+        var uncompressedFiles = new List<int>();
 
         var fileId = 0;
         for (int i = 0; i < input.Length; i++)
@@ -42,49 +42,57 @@ public class Day9_DiskFragmenter : PuzzelBase
             if (i % 2 == 0)
             {
                 // value is file length
-                uncompressedFile.AddRange(Enumerable.Repeat(fileId, value));
+                uncompressedFiles.AddRange(Enumerable.Repeat(fileId, value));
                 fileId++;
             }
             else
             {
                 // value is freespace length, freespace is represented by -1
-                uncompressedFile.AddRange(Enumerable.Repeat(-1, value));
+                uncompressedFiles.AddRange(Enumerable.Repeat(-1, value));
             }
         }
 
         var frontIdx = 0;
-        var backIdx = uncompressedFile.Count - 1;
+        var backIdx = uncompressedFiles.Count - 1;
         do
         {
-            while (uncompressedFile[backIdx] == -1)
+            while (uncompressedFiles[backIdx] == -1)
             {
                 backIdx--;
             }
 
-            while (uncompressedFile[frontIdx] != -1)
+            while (uncompressedFiles[frontIdx] != -1)
             {
                 frontIdx++;
+                if (frontIdx >= backIdx)
+                {
+                    break;
+                }
             }
 
-            uncompressedFile[frontIdx] = uncompressedFile[backIdx];
-            uncompressedFile[backIdx] = -1;
+            if (frontIdx >= backIdx)
+            {
+                break;
+            }
+
+            uncompressedFiles[frontIdx] = uncompressedFiles[backIdx];
+            uncompressedFiles[backIdx] = -1;
 
             frontIdx++;
             backIdx--;
 
-        } while (frontIdx < backIdx);
+        } while (frontIdx <= backIdx);
 
-        var checksum = uncompressedFile.Where(d => d != -1).Select((d, i) => (decimal)d * i).Sum();
-
+        var checksum = uncompressedFiles.Select((d, i) => d == -1 ? 0 : i * (decimal)d).Sum();
         return checksum;
     }
 
     protected override object Part2()
     {
-        var uncompressedFile = new List<int>();
-
         var files = new List<File>();
         var freeSpaces = new List<FreeSpace>();
+
+        // Find files and freespace
         var fileId = 0;
         var uncompressdIdx = 0;
         for (int i = 0; i < input.Length; i++)
@@ -105,13 +113,37 @@ public class Day9_DiskFragmenter : PuzzelBase
             uncompressdIdx += value;
         }
 
+
+        // Rearrange files
         files.Reverse();
         foreach (var file in files)
         {
-            file.Length = 23;
+            var freeSpace = freeSpaces.FirstOrDefault(fs => fs.Length >= file.Length && fs.StartIdx < file.StartIdx);
+            if (freeSpace != null)
+            {
+                // There is a freespace that fit the file
+                file.StartIdx = freeSpace.StartIdx;
+                freeSpace.StartIdx += file.Length;
+                freeSpace.Length -= file.Length;
+            }
         }
 
-        return 0;
+
+        // Calculate checksum
+        files = files.OrderBy(f => f.StartIdx).ToList();
+        var lastFile = files.Last();
+        var uncompressedFiles = Enumerable.Repeat(-1, lastFile.StartIdx + lastFile.Length).ToArray();
+        foreach (var file in files)
+        {
+
+            for (int i = 0; i < file.Length; i++)
+            {
+                uncompressedFiles[file.StartIdx + i] = file.Id;
+            }
+        }
+
+        var checksum = uncompressedFiles.Select((d, i) => d == -1 ? 0 : i * (decimal)d).Sum();
+        return checksum;
     }
 
     private static string ToString(int value, int count)
@@ -122,5 +154,19 @@ public class Day9_DiskFragmenter : PuzzelBase
             sb.Append(value);
         }
         return sb.ToString();
+    }
+
+    private static void PrintFiles(List<File> files)
+    {
+        var uncompressedFiles = Enumerable.Repeat(-1, files.Last().StartIdx + files.Last().Length).ToArray();
+        foreach (var file in files)
+        {
+            for (int i = 0; i < file.Length; i++)
+            {
+                uncompressedFiles[file.StartIdx + i] = file.Id;
+            }
+        }
+
+        Console.WriteLine($"1 {string.Join("", uncompressedFiles.Select(d => d == -1 ? " ." : d.ToString().PadLeft(2, ' ')))}");
     }
 }
