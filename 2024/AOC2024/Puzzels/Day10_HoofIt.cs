@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 public class Day10_HoofIt : PuzzelBase
@@ -15,10 +16,10 @@ public class Day10_HoofIt : PuzzelBase
 
     private List<Offset> directionOffsets = new()
     {
-        new Offset(0, -1), // Up
-        new Offset(1, 0), // Right
-        new Offset(0, 1), // Down
-        new Offset(-1, 0), // Left
+        new Offset(-1, 0), // Up
+        new Offset(0, 1), // Right
+        new Offset(1, 0), // Down
+        new Offset(0, -1), // Left
     };
 
 
@@ -35,15 +36,19 @@ public class Day10_HoofIt : PuzzelBase
 
     protected override object Part1()
     {
-
-        var trailheads = map.SelectMany((row, y) => row.Where((cell, x) => cell == 0).Select((cell, x) => new Position(y, x)));
+        var trailheads = this.map
+            .SelectMany((row, y) => row.Select((value, x) => new { value, position = new Position(y, x) }))
+            .Where(item => item.value == 9)
+            .Select(item => item.position)
+            .ToList();
 
         var scores = new List<int>();
         foreach (var trailhead in trailheads)
         {
             var path = new List<Position> { trailhead };
             var trails = FindHikingTrail(path, trailhead, map[trailhead.Y][trailhead.X]);
-            scores.Add(trails.Count());
+           
+            scores.Add(trails.DistinctBy(t => t.Path.Last()).Count());
         }
 
         return scores.Sum();
@@ -51,7 +56,22 @@ public class Day10_HoofIt : PuzzelBase
 
     protected override object Part2()
     {
-        return 0;
+        var trailheads = this.map
+            .SelectMany((row, y) => row.Select((value, x) => new { value, position = new Position(y, x) }))
+            .Where(item => item.value == 9)
+            .Select(item => item.position)
+            .ToList();
+
+        var scores = new List<int>();
+        foreach (var trailhead in trailheads)
+        {
+            var path = new List<Position> { trailhead };
+            var trails = FindHikingTrail(path, trailhead, map[trailhead.Y][trailhead.X]);
+
+            scores.Add(trails.Count());
+        }
+
+        return scores.Sum();
     }
 
     private List<HikingTrail> FindHikingTrail(List<Position> path, Position currentPosition, int currentHeight)
@@ -67,15 +87,16 @@ public class Day10_HoofIt : PuzzelBase
 
             var nextHeight = this.map[nextPosition.Y][nextPosition.X];
 
-            if (nextHeight != currentHeight + 1)
+            if (nextHeight != currentHeight - 1)
             {
                 continue;
             }
 
-            if (nextHeight == 9)
+            if (nextHeight == 0)
             {
-                path.Add(nextPosition);
-                hikingTrails.Add(new HikingTrail(path));
+                var foundPath = new List<Position>(path);
+                foundPath.Add(nextPosition);
+                hikingTrails.Add(new HikingTrail(foundPath));
                 continue;
             }
 
@@ -88,5 +109,26 @@ public class Day10_HoofIt : PuzzelBase
         }
 
         return hikingTrails;
+    }
+
+    private static void PrintPath(int[][] map, List<Position> path)
+    {
+        Console.WriteLine($"Path: {(string.Join(",", path.Select(p => $"({p.Y},{p.X})")))}");
+        for (var y = 0; y < map.Length; y++)
+        {
+            for (var x = 0; x < map[y].Length; x++)
+            {
+                if(path.Any(p => p.Y == y && p.X == x))
+                {
+                    ConsoleExtensions.Write(map[y][x], ConsoleColor.Red);
+                }
+                else
+                {
+                    Console.Write(map[y][x]);
+                }
+            }
+
+            Console.WriteLine();
+        }
     }
 }
