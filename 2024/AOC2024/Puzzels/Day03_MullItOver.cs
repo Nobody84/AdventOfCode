@@ -2,14 +2,14 @@
 
 using System.Text.RegularExpressions;
 
-public class Day3_MullItOver : PuzzelBase
+public class Day03_MullItOver : PuzzelBase
 {
     private const string mullRegexPattern = @"mul\s*\(\s*(?<X>[\d]{1,3})\s*,(?<Y>[\d]{1,3})\s*\)";
     private const string dontRegexPattern = @"don't\(\)(?:.|\n)*?do\(\)";
     private const string lastDontRegexPattern = @"don't\(\)(?:.|\n)*";
     private string input = string.Empty;
 
-    public Day3_MullItOver()
+    public Day03_MullItOver()
         : base(3, "Mull It Over")
     {
     }

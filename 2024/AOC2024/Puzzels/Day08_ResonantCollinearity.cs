@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 
-public class Day8_ResonantCollinearity : PuzzelBase
+public class Day08_ResonantCollinearity : PuzzelBase
 {
     private readonly Regex antennaRegex = new(@"([^.]{1})");
     private List<IGrouping<char, Antenna>> antennaGroups = new();
@@ -15,7 +15,7 @@ public class Day8_ResonantCollinearity : PuzzelBase
     private record GridDimension(int Height, int Width);
     private record ResonancePoint(int Y, int X);
 
-    public Day8_ResonantCollinearity()
+    public Day08_ResonantCollinearity()
         : base(8, "Resonant Collinearity")
     {
     }

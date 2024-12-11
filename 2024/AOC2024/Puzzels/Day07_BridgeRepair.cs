@@ -3,14 +3,14 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-public class Day7_BridgeRepair : PuzzelBase
+public class Day07_BridgeRepair : PuzzelBase
 {
     private readonly Regex numberRegex = new(@"(\d+)");
     private record Equation(ulong ExpectedResult, ulong[] Terms);
 
     private List<Equation> equations = new();
 
-    public Day7_BridgeRepair()
+    public Day07_BridgeRepair()
         : base(7, "Bridge Repair")
     {
     }

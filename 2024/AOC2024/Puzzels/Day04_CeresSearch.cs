@@ -1,10 +1,10 @@
 ﻿namespace AOC2024.Puzzels;
 
-public class Day4_CeresSearch : PuzzelBase
+public class Day04_CeresSearch : PuzzelBase
 {
     private char[][] inputMatrix;
 
-    public Day4_CeresSearch() 
+    public Day04_CeresSearch() 
         : base(4, "Ceres Search")
     {
     }

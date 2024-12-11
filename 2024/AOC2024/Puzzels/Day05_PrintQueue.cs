@@ -2,9 +2,9 @@
 
 using System.Collections.Generic;
 
-public class Day5_PrintQueue : PuzzelBase
+public class Day05_PrintQueue : PuzzelBase
 {
-    public Day5_PrintQueue()
+    public Day05_PrintQueue()
         : base(5, "Print Queue")
     {
     }

@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text.RegularExpressions;
 
-public class Day6_GuardGallivant : PuzzelBase
+public class Day06_GuardGallivant : PuzzelBase
 {
     private readonly Regex opsticalRegex = new Regex(@"#{1}");
     private readonly Regex guardRegex = new Regex(@"[<|^|>|v]{1}");
 
-    public Day6_GuardGallivant()
+    public Day06_GuardGallivant()
         : base(6, "Guard Gallivant")
     {
     }

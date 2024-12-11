@@ -1,11 +1,11 @@
 ﻿
 namespace AOC2024.Puzzels;
 
-public class Day2_RedNosedReports : PuzzelBase
+public class Day02_RedNosedReports : PuzzelBase
 {
     private IEnumerable<int[]> levelsList = new List<int[]>();
 
-    public Day2_RedNosedReports() 
+    public Day02_RedNosedReports() 
         : base(2, "Red-Nosed Reports")
     {
     }

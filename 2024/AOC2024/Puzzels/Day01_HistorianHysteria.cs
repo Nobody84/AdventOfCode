@@ -1,11 +1,11 @@
 ﻿namespace AOC2024.Puzzels;
 
-public class Day1_HistorianHysteria : PuzzelBase
+public class Day01_HistorianHysteria : PuzzelBase
 {
     private int[] leftList = [];
     private int[] rightList = [];
 
-    public Day1_HistorianHysteria()
+    public Day01_HistorianHysteria()
         : base(1, "Historian Hysteria")
     {
     }

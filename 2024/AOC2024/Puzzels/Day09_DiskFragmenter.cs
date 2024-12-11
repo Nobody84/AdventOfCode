@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-public class Day9_DiskFragmenter : PuzzelBase
+public class Day09_DiskFragmenter : PuzzelBase
 {
     private int[] input = [];
 
@@ -21,7 +21,7 @@ public class Day9_DiskFragmenter : PuzzelBase
         public int Length { get; set; }
     };
 
-    public Day9_DiskFragmenter()
+    public Day09_DiskFragmenter()
     : base(9, "Disk Fragmenter")
     {
     }

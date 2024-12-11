@@ -28,7 +28,7 @@ namespace AOC2024
         public void Run()
         {
             Console.WriteLine($"Day {this.Day} - {this.Name}");
-            this.PreparePart1($"Inputs/Day{Day}.txt");
+            this.PreparePart1($"Inputs/Day{Day.ToString().PadLeft(2,'0')}.txt");
             var sw = new Stopwatch();
             sw.Restart();
             var result1 = Part1();
