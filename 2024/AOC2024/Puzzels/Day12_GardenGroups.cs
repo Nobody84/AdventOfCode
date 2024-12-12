@@ -1,5 +1,8 @@
 ﻿namespace AOC2024.Puzzels;
 
+using System.Formats.Asn1;
+using System.Xml;
+
 public class Day12_GardenGroups : PuzzelBase
 {
     private Plant[][] garden;
@@ -10,24 +13,37 @@ public class Day12_GardenGroups : PuzzelBase
     {
         public char PlantType { get; init; } = plantType;
 
-        public int Y { get; init; } = y;
-
-        public int X { get; init; } = x;
+        public Position Position { get; init; } = new(y, x);
 
         public bool Visited { get; set; } = false;
 
-        public int Fences { get; set; } = 0;
+        public List<Fence> Fences { get; set; } = new();
     }
 
-    record Offset(int X, int Y);
-
-    private static List<Offset> DirectionOffsets = new()
+    private class FenceSegment(Direction direction, int start, int level)
     {
-        new Offset(-1, 0), // Up
-        new Offset(0, 1), // Right
-        new Offset(1, 0), // Down
-        new Offset(0, -1), // Left
-    };
+        public Direction Direction { get; init; } = direction;
+
+        public int Start { get; set; } = start;
+
+        public int End { get; set; } = start;
+
+        public int Level { get; init; } = level;
+    }
+
+    private record Fence(Direction Direction);
+
+    private record Position(int Y, int X);
+
+    record Offset(int Y, int X);
+
+    private enum Direction
+    {
+        Up,
+        Right,
+        Down,
+        Left
+    }
 
 
     public Day12_GardenGroups()
@@ -57,7 +73,6 @@ public class Day12_GardenGroups : PuzzelBase
     protected override object Part1()
     {
         var groups = new List<List<Plant>>();
-
         for (var y = 0; y < MaxY; y++)
         {
             for (var x = 0; x < MaxX; x++)
@@ -74,23 +89,102 @@ public class Day12_GardenGroups : PuzzelBase
             }
         }
 
-        return groups.Select(g => g.Select(p => p.Fences).Sum() * g.Count).Sum();
+        return groups.Select(g => g.Select(p => p.Fences.Count).Sum() * g.Count).Sum();
+    }
+
+    protected override object Part2()
+    {
+        var groups = new List<List<Plant>>();
+        for (var y = 0; y < MaxY; y++)
+        {
+            for (var x = 0; x < MaxX; x++)
+            {
+                var plant = this.garden[y][x];
+                if (plant.Visited)
+                {
+                    continue;
+                }
+
+                var plantGroup = new List<Plant>();
+                VisitPlant(ref this.garden, ref plantGroup, plant);
+                groups.Add(plantGroup);
+            }
+        }
+
+        var totalCost = 0;
+        foreach (var group in groups)
+        {
+            var minX = group.Min(p => p.Position.X);
+            var maxX = group.Max(p => p.Position.X);
+            var minY = group.Min(p => p.Position.Y);
+            var maxY = group.Max(p => p.Position.Y);
+
+            var fenceSegments = new List<FenceSegment>();
+            foreach (var plant in group)
+            {
+                foreach (var fence in plant.Fences)
+                {
+                    var position = fence.Direction switch
+                    {
+                        Direction.Up => plant.Position.X,
+                        Direction.Down => plant.Position.X,
+                        Direction.Right => plant.Position.Y,
+                        Direction.Left => plant.Position.Y,
+                        _ => throw new NotImplementedException(),
+                    };
+                    
+                    var level = fence.Direction switch
+                    {
+                        Direction.Up => plant.Position.Y,
+                        Direction.Down => plant.Position.Y,
+                        Direction.Right => plant.Position.X,
+                        Direction.Left => plant.Position.X,
+                        _ => throw new NotImplementedException(),
+                    };
+                    // find a neighbor fence segment with the same direction
+                    var neighborFenceSegment = fenceSegments.FirstOrDefault(fs => 
+                            fs.Direction == fence.Direction && 
+                            fs.Level == level && 
+                            (fs.Start - 1 == position || fs.End + 1 == position));
+                    if (neighborFenceSegment != null)
+                    {
+                        if (neighborFenceSegment.Start - 1 == position)
+                        {
+                            neighborFenceSegment.Start = position;
+                        }
+                        else
+                        {
+                            neighborFenceSegment.End = position;
+                        }
+                    }
+                    else
+                    {
+                        fenceSegments.Add(new FenceSegment(fence.Direction, position, level));
+                    }
+                }
+            }
+
+            totalCost += group.Count * fenceSegments.Count;
+        }
+        
+        return totalCost;
     }
 
     private static void VisitPlant(ref Plant[][] garden, ref List<Plant> plantGroup, Plant plant)
     {
         plantGroup.Add(plant);
         plant.Visited = true;
-        foreach (var offset in DirectionOffsets)
+        foreach (Direction direction in Enum.GetValues(typeof(Direction)))
         {
-            if (plant.Y + offset.Y < 0 || plant.Y + offset.Y >= MaxY || plant.X + offset.X < 0 || plant.X + offset.X >= MaxX)
+            var offset = GetOffset(direction);
+            if (plant.Position.Y + offset.Y < 0 || plant.Position.Y + offset.Y >= MaxY || plant.Position.X + offset.X < 0 || plant.Position.X + offset.X >= MaxX)
             {
-                plant.Fences++;
+                plant.Fences.Add(new Fence(direction));
                 continue;
             }
             else
             {
-                var nextPlant = garden[plant.Y + offset.Y][plant.X + offset.X];
+                var nextPlant = garden[plant.Position.Y + offset.Y][plant.Position.X + offset.X];
                 if (nextPlant.PlantType == plant.PlantType)
                 {
                     if (!nextPlant.Visited)
@@ -100,14 +194,21 @@ public class Day12_GardenGroups : PuzzelBase
                 }
                 else
                 {
-                    plant.Fences++;
+                    plant.Fences.Add(new Fence(direction));
                 }
             }
         }
     }
 
-    protected override object Part2()
+    private static Offset GetOffset(Direction direction)
     {
-        return 0;
+        return direction switch
+        {
+            Direction.Up => new Offset(-1, 0),
+            Direction.Right => new Offset(0, 1),
+            Direction.Down => new Offset(1, 0),
+            Direction.Left => new Offset(0, -1),
+            _ => throw new NotImplementedException(),
+        };
     }
 }
