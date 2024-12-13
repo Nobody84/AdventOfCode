@@ -1,6 +1,7 @@
 ﻿namespace AOC2024.Puzzels;
 
 using System.Formats.Asn1;
+using System.Threading.Tasks.Dataflow;
 using System.Xml;
 
 public class Day12_GardenGroups : PuzzelBase
@@ -94,6 +95,8 @@ public class Day12_GardenGroups : PuzzelBase
 
     protected override object Part2()
     {
+        var colors = new List<ConsoleColor> { ConsoleColor.Red, ConsoleColor.Green, ConsoleColor.Blue, ConsoleColor.Yellow, ConsoleColor.Magenta, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Gray, ConsoleColor.DarkRed, ConsoleColor.DarkGreen, ConsoleColor.DarkBlue, ConsoleColor.DarkYellow, ConsoleColor.DarkMagenta, ConsoleColor.DarkCyan, ConsoleColor.DarkGray };
+
         var groups = new List<List<Plant>>();
         for (var y = 0; y < MaxY; y++)
         {
@@ -110,6 +113,25 @@ public class Day12_GardenGroups : PuzzelBase
                 groups.Add(plantGroup);
             }
         }
+
+        //for (var y = 0; y < MaxY; y++)
+        //{
+        //    for (var x = 0; x < MaxX; x++)
+        //    {
+        //        var group = groups.FirstOrDefault(g => g.Any(p => p.Position.Y == y && p.Position.X == x));
+        //        if (group == null)
+        //        {
+        //            Console.Write(this.garden[y][x].PlantType);
+        //        }
+        //        else
+        //        {
+        //            ConsoleExtensions.Write(this.garden[y][x].PlantType, colors[groups.IndexOf(group) % colors.Count]);
+        //        }
+        //    }
+
+        //    Console.WriteLine();
+        //}
+
 
         var totalCost = 0;
         foreach (var group in groups)
@@ -132,7 +154,7 @@ public class Day12_GardenGroups : PuzzelBase
                         Direction.Left => plant.Position.Y,
                         _ => throw new NotImplementedException(),
                     };
-                    
+
                     var level = fence.Direction switch
                     {
                         Direction.Up => plant.Position.Y,
@@ -142,9 +164,9 @@ public class Day12_GardenGroups : PuzzelBase
                         _ => throw new NotImplementedException(),
                     };
                     // find a neighbor fence segment with the same direction
-                    var neighborFenceSegment = fenceSegments.FirstOrDefault(fs => 
-                            fs.Direction == fence.Direction && 
-                            fs.Level == level && 
+                    var neighborFenceSegment = fenceSegments.FirstOrDefault(fs =>
+                            fs.Direction == fence.Direction &&
+                            fs.Level == level &&
                             (fs.Start - 1 == position || fs.End + 1 == position));
                     if (neighborFenceSegment != null)
                     {
@@ -164,9 +186,27 @@ public class Day12_GardenGroups : PuzzelBase
                 }
             }
 
+            // Consolidate fence segments
+            var fencesToRemoveIndexes = new List<int>();
+            var tempFenceSegments = new List<FenceSegment>(fenceSegments);
+            for (var i = 0; i < tempFenceSegments.Count; i++)
+            {
+                var fenceSegment = tempFenceSegments[i];
+                var neighbourFenceSegment = fenceSegments.FirstOrDefault(fs =>
+                    fs != fenceSegment &&
+                    fs.Direction == fenceSegment.Direction &&
+                    fs.Level == fenceSegment.Level &&
+                    (fs.Start - 1 == fenceSegment.End || fs.End + 1 == fenceSegment.Start));
+
+                if (neighbourFenceSegment != null)
+                {
+                    fenceSegments.Remove(fenceSegment);
+                }
+            }
+
             totalCost += group.Count * fenceSegments.Count;
         }
-        
+
         return totalCost;
     }
 
