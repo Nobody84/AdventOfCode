@@ -1,5 +1,6 @@
 ﻿namespace AOC2024.Puzzels;
 
+using System;
 using System.Text.RegularExpressions;
 
 public class Day13_ClawContraption : PuzzelBase
@@ -9,19 +10,20 @@ public class Day13_ClawContraption : PuzzelBase
 
     private List<ClawMachine> clawMachines = new();
 
-    private record ButtonBehaviour(int offsetX, int offsetY);
+    private record ButtonBehaviour(double X, double Y);
 
-    public record Position(int X, int Y);
+    public record Position(double X, double Y);
 
     private record ClawMachine(ButtonBehaviour buttonA, ButtonBehaviour buttonB, Position pricePosition);
 
     public Day13_ClawContraption()
-        : base(13, "Claw Contraption")
+    : base(13, "Claw Contraption")
     {
     }
 
     protected override void PreparePart1(string inputFile)
     {
+        this.clawMachines.Clear();
         var lines = File.ReadLines(inputFile).ToArray();
         for (var i = 0; i < lines.Length; i += 4)
         {
@@ -39,19 +41,63 @@ public class Day13_ClawContraption : PuzzelBase
 
     protected override object Part1()
     {
-        foreach(var clawMachine in this.clawMachines)
+        var count = 0m;
+        foreach (var clawMachine in this.clawMachines)
         {
-            var price = clawMachine.pricePosition;
-            var buttonA = clawMachine.buttonA;
-            var buttonB = clawMachine.buttonB;
+            var p = clawMachine.pricePosition;
+            var a = clawMachine.buttonA;
+            var b = clawMachine.buttonB;
 
-            // Binary Tree Search
+            if (a.X * b.Y == b.X * a.Y)
+            {
+                continue;
+            }
+
+            var nA = (int)((p.X * b.Y - p.Y * b.X) / (a.X * b.Y - a.Y * b.X));
+            var nB = (int)((p.X * a.Y - p.Y * a.X) / (b.X * a.Y - b.Y * a.X));
+
+            if (nA + nB > 100)
+            {
+                continue;
+            }
+
+            if (nA * a.X + nB * b.X == p.X && nA * a.Y + nB * b.Y == p.Y)
+            {
+                count += (nA * 3 + nB);
+            }
         }
-        return 0;
+
+        return count;
     }
 
     protected override object Part2()
     {
-        return 0;
+        UInt128 count = 0;
+        foreach (var clawMachine in this.clawMachines)
+        {
+            var p = new Position(clawMachine.pricePosition.X + 10000000000000, clawMachine.pricePosition.Y + 10000000000000);
+            var a = clawMachine.buttonA;
+            var b = clawMachine.buttonB;
+
+            if (a.X * b.Y == b.X * a.Y)
+            {
+                continue;
+            }
+
+            var nA = (UInt128)((p.X * b.Y - p.Y * b.X) / (a.X * b.Y - a.Y * b.X));
+            var nB = (UInt128)((p.X * a.Y - p.Y * a.X) / (b.X * a.Y - b.Y * a.X));
+
+            if (nA < 0 || nB < 0)
+            {
+                continue;
+            }
+
+            if (nA * (UInt128)a.X + nB * (UInt128)b.X == (UInt128)p.X && nA * (UInt128)a.Y + nB * (UInt128)b.Y == (UInt128)p.Y)
+            {
+                count += (nA * (UInt128)3 + nB);
+            }
+        }
+
+        return count;
     }
 }
