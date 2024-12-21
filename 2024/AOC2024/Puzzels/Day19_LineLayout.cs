@@ -11,6 +11,8 @@ public class Day19_LineLayout : PuzzelBase
     private readonly object hashSetLock = new();
     private HashSet<string> impossiblePartialDesigns = new();
 
+    private List<List<string>> possiblePatterns = new();
+
     public Day19_LineLayout()
      : base(19, "Line Layout")
     {
@@ -20,6 +22,7 @@ public class Day19_LineLayout : PuzzelBase
     {
         this.availableTowels = new();
         this.designs = new();
+        this.impossiblePartialDesigns = new();
 
         var lines = System.IO.File.ReadAllLines(inputFile);
         var firstCharGroups = lines[0].Split(",").Select(v => v.Trim()).GroupBy(s => s[0]);
@@ -52,46 +55,47 @@ public class Day19_LineLayout : PuzzelBase
     protected override object Part1()
     {
         var count = 0;
-        Parallel.ForEach(this.designs, design =>
+        foreach (var design in this.designs)
         {
             if (CheckTowel(design))
             {
-                Interlocked.Increment(ref count);
+                count++;
             }
-        });
+        };
 
         return count;
     }
 
     protected override object Part2()
     {
-        return 0;
+        foreach (var design in this.designs)
+        {
+            CheckTowel2(design, new());
+        };
 
+        foreach (var pattern in this.possiblePatterns)
+        {
+            Console.WriteLine(string.Join(",", pattern));
+        }
+
+        return this.possiblePatterns.Count;
     }
 
     private bool CheckTowel(string partialDesign)
     {
         if (this.impossiblePartialDesigns.Contains(partialDesign))
-        {
-            lock (hashSetLock)
-            {
-                this.impossiblePartialDesigns.Add(partialDesign);
-            }
+        {            
             return false;
         }
 
         if (!this.availableTowels.TryGetValue(partialDesign[0], out Dictionary<int, List<string>> lengthDict))
-        {
-            lock (hashSetLock)
-            {
-                this.impossiblePartialDesigns.Add(partialDesign);
-            }
+        {            
             return false;
         }
 
         var towels = lengthDict.Where(e => e.Key <= partialDesign.Length).SelectMany(e => e.Value);
         if (!towels.Any())
-        {
+        {            
             return false;
         }
 
@@ -99,8 +103,6 @@ public class Day19_LineLayout : PuzzelBase
         {
             if (partialDesign == towel)
             {
-                //currentTowels.Add(towel);
-                //possiblePatterns.Add(currentTowels);
                 return true;
             }
             else
@@ -119,6 +121,56 @@ public class Day19_LineLayout : PuzzelBase
         lock (hashSetLock)
         {
             this.impossiblePartialDesigns.Add(partialDesign);
+        }
+        return false;
+    }
+
+    private bool CheckTowel2(string partialDesign, List<string> currentTowels)
+    {
+        if (this.impossiblePartialDesigns.Contains(partialDesign))
+        {
+            return false;
+        }
+
+        if (!this.availableTowels.TryGetValue(partialDesign[0], out Dictionary<int, List<string>> lengthDict))
+        {
+            return false;
+        }
+
+        var towels = lengthDict.Where(e => e.Key <= partialDesign.Length).SelectMany(e => e.Value);
+        if (!towels.Any())
+        {
+            return false;
+        }
+
+        var found = false;
+        foreach (var towel in towels)
+        {
+            if (partialDesign == towel)
+            {
+                currentTowels.Add(towel);
+                possiblePatterns.Add(currentTowels);
+                return true;
+            }
+            else
+            {
+                if (partialDesign.StartsWith(towel))
+                {
+                    var newPartialDesign = partialDesign.Substring(towel.Length);
+                    if (CheckTowel2(newPartialDesign, new List<string>(currentTowels) { towel }))
+                    {
+                        found = true;
+                    }
+                }
+            }
+        }
+
+        if (!found)
+        {
+            lock (hashSetLock)
+            {
+                this.impossiblePartialDesigns.Add(partialDesign);
+            }
         }
 
         return false;
