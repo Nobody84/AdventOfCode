@@ -94,6 +94,7 @@ public class Day17_ChronospatialComputer : PuzzelBase
             {
                 Console.WriteLine(string.Join(",", this.output));
             }
+
             loopCount++;
         }
         while (expectedResult != string.Join(",", this.output));
