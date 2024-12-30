@@ -1,4 +1,6 @@
-﻿namespace AOC2024.Puzzels;
+﻿using System.Text.RegularExpressions;
+
+namespace AOC2024.Puzzels;
 
 public class Day20_RaceCondition : PuzzelBase
 {
@@ -26,14 +28,6 @@ public class Day20_RaceCondition : PuzzelBase
         new Offset(1, 0),
         new Offset(0, -1),
         new Offset(-1, 0)
-    }; 
-    
-    private readonly List<Offset> cheatOffsets = new()
-    {
-        new Offset(0, 2),
-        new Offset(2, 0),
-        new Offset(0, -2),
-        new Offset(-2, 0)
     };
 
     public Day20_RaceCondition()
@@ -68,37 +62,7 @@ public class Day20_RaceCondition : PuzzelBase
     protected override object Part1()
     {
         List<Position> path = GetPath();
-
-        // Check for posible cheatings
-        var cheatResults = new List<CheatResult>();
-        foreach (var position in path)
-        {
-            foreach (var cheatOffset in this.cheatOffsets)
-            {
-                var newPosition = new Position(position.Y + cheatOffset.Y, position.X + cheatOffset.X);
-                if (newPosition.Y < 0 || newPosition.Y >= this.maze.Length || newPosition.X < 0 || newPosition.X >= this.maze[0].Length)
-                {
-                    continue;
-                }
-
-                if (this.maze[newPosition.Y][newPosition.X].IsWall)
-                {
-                    continue;
-                }
-
-                if (this.maze[newPosition.Y][newPosition.X].Distance < this.maze[position.Y][position.X].Distance)
-                {
-                    continue;
-                }
-
-                var saving = this.maze[newPosition.Y][newPosition.X].Distance - this.maze[position.Y][position.X].Distance - 2;
-
-                if (saving > 0)
-                {
-                    cheatResults.Add(new CheatResult(position, newPosition, saving));
-                }
-            }
-        }
+        List<CheatResult> cheatResults = SearchForPosisibleCheats(path, 2);
 
         return cheatResults.Count(cr => cr.Saving >= 100);
     }
@@ -106,40 +70,14 @@ public class Day20_RaceCondition : PuzzelBase
     protected override object Part2()
     {
         List<Position> path = GetPath();
-        var cheatLength = 2;
+        List<CheatResult> cheatResults = SearchForPosisibleCheats(path, 20);
 
-        // Check for posible cheatings
-        var cheatResults = new List<CheatResult>();
-        foreach (var position in path)
+        foreach (var cheatResultGroup in cheatResults.GroupBy(cr => cr.Saving).OrderBy(g => g.Key).Where(g => g.Key >= 50))
         {
-            foreach (var directionOffset in this.directionOffsets)
-            {
-                var newPosition = new Position(position.Y + directionOffset.Y, position.X + directionOffset.X);
-                if (newPosition.Y < 0 || newPosition.Y >= this.maze.Length || newPosition.X < 0 || newPosition.X >= this.maze[0].Length)
-                {
-                    continue;
-                }
-
-                if (this.maze[newPosition.Y][newPosition.X].IsWall)
-                {
-                    continue;
-                }
-
-                if (this.maze[newPosition.Y][newPosition.X].Distance < this.maze[position.Y][position.X].Distance)
-                {
-                    continue;
-                }
-
-                var saving = this.maze[newPosition.Y][newPosition.X].Distance - this.maze[position.Y][position.X].Distance - 2;
-
-                if (saving > 0)
-                {
-                    cheatResults.Add(new CheatResult(position, newPosition, saving));
-                }
-            }
+            Console.WriteLine($"There are {(cheatResultGroup.Count() == 1 ? "one cheat" : $"{cheatResultGroup.Count()} cheats")} that save {cheatResultGroup.Key} picoseconds.");
         }
 
-        return cheatResults.Count(cr => cr.Saving >= 100);
+        return cheatResults.Count(cr => cr.Saving >= 50);
     }
 
     private List<Position> GetPath()
@@ -182,6 +120,46 @@ public class Day20_RaceCondition : PuzzelBase
         return path;
     }
 
+    private List<CheatResult> SearchForPosisibleCheats(List<Position> path, int cheatLength)
+    {
+        // Check for posible cheatings
+        var cheatResults = new List<CheatResult>();
+        foreach (var position in path)
+        {
+
+            foreach (var offset in this.directionOffsets)
+            {
+                for (var i = 1; i <= cheatLength; i++)
+                {
+                    var newPosition = new Position(position.Y + offset.Y * i, position.X + offset.X * i);
+                    if (newPosition.Y < 0 || newPosition.Y >= this.maze.Length || newPosition.X < 0 || newPosition.X >= this.maze[0].Length)
+                    {
+                        continue;
+                    }
+
+                    if (this.maze[newPosition.Y][newPosition.X].IsWall)
+                    {
+                        continue;
+                    }
+
+                    if (this.maze[newPosition.Y][newPosition.X].Distance < this.maze[position.Y][position.X].Distance)
+                    {
+                        continue;
+                    }
+
+                    var saving = this.maze[newPosition.Y][newPosition.X].Distance - this.maze[position.Y][position.X].Distance - i;
+
+                    if (saving > 0)
+                    {
+                        cheatResults.Add(new CheatResult(position, newPosition, saving));                        
+                    }
+                }
+            }
+        }
+
+        return cheatResults;
+    }
+
     private static void PrintMaze(Tile[][] maze, Position startPosition, Position endPosition, CheatResult cheatResult)
     {
         for (int y = 0; y < maze.Length; y++)
@@ -200,7 +178,7 @@ public class Day20_RaceCondition : PuzzelBase
                 {
                     ConsoleExtensions.Write("C", ConsoleColor.Red);
                 }
-                else if(startPosition.Y == y && startPosition.X == x)
+                else if (startPosition.Y == y && startPosition.X == x)
                 {
                     Console.Write("S");
                 }
