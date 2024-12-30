@@ -1,8 +1,4 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
-
-namespace AOC2024.Puzzels;
+﻿namespace AOC2024.Puzzels;
 
 public class Day18_RamRun : PuzzelBase
 {
